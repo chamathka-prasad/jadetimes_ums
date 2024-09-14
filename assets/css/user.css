@@ -1,0 +1,85 @@
+@media only screen and (max-width: 800px) {
+  .setBackImg {
+    background-image: url("../img/LogInBackSmall.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+ 
+  }
+}
+@media only screen and (min-width: 800px) {
+  .setBackImg {
+    background-image: url("../img/LogInBack.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+}
+
+.smoothScroll {
+  scroll-behavior: smooth;
+}
+
+.backgroundColorChange {
+  background-color: #181414;
+}
+.jtLogo {
+  background-image: url("../img/logoDark.jpg");
+  height: 100%;
+  width: auto;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.removeCorner {
+  border-radius: 0%;
+}
+
+.colorRed {
+  color: red;
+}
+
+.horizontal-scroll-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.horizontal-scroll-menu {
+  overflow-x: hidden;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.horizontal-scroll-menu a {
+  display: inline-block;
+  padding: 10px 20px;
+  white-space: normal;
+  border: 1px solid #ddd;
+  margin-right: 10px;
+  text-align: center;
+}
+
+.horizontal-scroll-menu a:hover {
+  background-color: #f1f1f1;
+}
+
+.scroll-arrow {
+  cursor: pointer;
+  font-size: 24px;
+  user-select: none;
+  padding: 10px;
+}
+.smallText {
+  font-size: smaller;
+}
+.imageSize {
+  height: 230px;
+}
+.backGroundRed{
+background-color:#ff0d0d;
+}
+.textredChange{
+    color:#ff0d0d;
+}
+.imageSize {
+  height: 230px;
+}
