@@ -90,10 +90,10 @@
 
 				if ($_SESSION["jd_user"]["department_id"] == "4") {
 				?>
-					<li class="<?php if ($currentPage == "manageArticles.php") {
+					<li class="<?php if ($currentPage == "headmanageArticles.php") {
 									echo "active current-page";
 								} ?>">
-						<a href="manageArticles.php">
+						<a href="headmanageArticles.php">
 							<i class="bi bi-journal-bookmark"></i>
 							<span class="menu-text">Articles</span>
 						</a>

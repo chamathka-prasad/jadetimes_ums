@@ -21,7 +21,7 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-W
 
 // Ensure the response is JSON
 header("Content-Type: application/json");
-if (isset($_SESSION["jd_admin"])) {
+if (isset($_SESSION["jd_admin"])||isset($_SESSION["jd_user"])) {
 
     require "connection.php";
 

@@ -1083,4 +1083,274 @@ function loadUserAttendance() {
 }
 
 
+function loadUserArticles(stat) {
+
+
+    var selectUser = document.getElementById("select-state");
+
+    var from = document.getElementById("from");
+    var to = document.getElementById("to");
+    var status = document.getElementById("status");
+
+
+
+
+    var ele = document.getElementsByName('btnradio');
+    var dip = ""
+    for (i = 0; i < ele.length; i++) {
+        if (ele[i].checked) {
+            dip = ele[i].value;
+        }
+
+    }
+    var page = 1;
+
+    if (stat == 2) {
+        var pagi = document.getElementsByName('pagi');
+
+        for (j = 0; j < pagi.length; j++) {
+            if (pagi[j].checked) {
+                page = Number(pagi[j].value);
+            }
+
+        }
+    }
+
+
+    var formData = new FormData();
+    formData.append("selectUser", selectUser.value);
+    formData.append("from", from.value);
+    formData.append("to", to.value);
+
+    formData.append("order", dip);
+    formData.append("status", status.value);
+    formData.append("page", page);
+
+
+
+
+
+
+    var tablebody = document.getElementById("tableBodyUser");
+    tablebody.innerHTML = "";
+    fetch(baseUrl + "userArticlessLoadProcess.php", {
+        method: "POST",
+        body: formData,
+
+
+    }).then(function (resp) {
+        return resp.json();
+
+    })
+        .then(function (value) {
+
+            var pagicontainer = document.getElementById('pagicontainer');
+            pagicontainer.innerHTML = "";
+
+            if (value.type == "success") {
+                var userSearchData = value.message;
+
+                for (let index = 0; index < userSearchData.length; index++) {
+                    const user = userSearchData[index];
+
+                    const newRow = document.createElement('tr');
+                    const nocell = document.createElement('td');
+                    nocell.textContent = index + 1;
+                    const idCell = document.createElement('td');
+                    idCell.textContent = user[3];
+
+                    const roleCell = document.createElement('td');
+                    roleCell.textContent = user[0] + " " + user[1]+" "+user[2];
+
+                    const addressCell = document.createElement('td');
+                    addressCell.textContent = user[5];
+
+                    const endDateCell = document.createElement('td');
+                    endDateCell.textContent = user[4];
+
+                    const date = document.createElement('td');
+                    date.textContent = user[6];
+
+                    const salaryCell = document.createElement('td');
+
+                    if (user[7] == 1) {
+                        salaryCell.innerText = "Commercial";
+                        salaryCell.classList = "bg-danger-subtle text-black text-center";
+                    } else if (user[7] == 2) {
+                        salaryCell.innerText = "non Commercial";
+                        salaryCell.classList = "text-black text-center";
+                    } 
+
+
+
+                    newRow.appendChild(nocell);
+                    newRow.appendChild(idCell);
+                    newRow.appendChild(roleCell);
+                    newRow.appendChild(addressCell);
+
+
+                    newRow.appendChild(endDateCell);
+                    newRow.appendChild(date);
+                    newRow.appendChild(salaryCell);
+
+                    tablebody.appendChild(newRow);
+                }
+
+
+                var btnCount = value.buttoncount;
+
+
+                var firstpagi = document.createElement('input');
+                firstpagi.type = 'radio';
+                firstpagi.className = 'btn-check';
+                firstpagi.name = 'pagi';
+                firstpagi.id = 'firstpagi';
+
+                firstpagi.value = 1;
+                firstpagi.onchange = function () {
+                    loadUserArticles(2);
+                }
+
+
+
+                var firstlabel = document.createElement('label');
+                firstlabel.className = 'btn btn-outline-info removeCorner';
+                firstlabel.htmlFor = 'firstpagi';
+                firstlabel.innerText = "First";
+
+
+
+                pagicontainer.appendChild(firstpagi);
+                pagicontainer.appendChild(firstlabel);
+
+
+
+                var startPage = 1;
+
+                var endpage = 5;
+
+
+
+                var val = page + 4;
+
+
+
+
+
+                if ((page + 4) < btnCount) {
+                    endpage = page + 4;
+                    startPage = page;
+
+                } else {
+
+                    if (btnCount >= 5) {
+                        startPage = btnCount - 4;
+
+                    } else {
+
+                        startPage = 1;
+
+                    }
+                    endpage = btnCount;
+                }
+
+
+
+                if (page != 1 && btnCount > 5) {
+                    var frontPagi = document.createElement('input');
+                    frontPagi.type = 'radio';
+                    frontPagi.className = 'btn-check';
+                    frontPagi.name = 'pagi';
+                    frontPagi.id = 'btnpagifront';
+
+                    frontPagi.value = Number(startPage) - 1;
+                    frontPagi.onchange = function () {
+                        loadUserArticles(2);
+                    }
+
+                    var labelfrontpagi = document.createElement('label');
+                    labelfrontpagi.className = 'btn btn-outline-info removeCorner';
+                    labelfrontpagi.htmlFor = 'btnpagifront';
+                    labelfrontpagi.innerText = Number(startPage) - 1;
+
+
+
+                    pagicontainer.appendChild(frontPagi);
+                    pagicontainer.appendChild(labelfrontpagi);
+
+                }
+
+                for (let i = startPage - 1; i < endpage; i++) {
+
+
+
+                    var radioButton = document.createElement('input');
+                    radioButton.type = 'radio';
+                    radioButton.className = 'btn-check';
+                    radioButton.name = 'pagi';
+                    radioButton.id = 'btnpagi' + i;
+                    var pageVal = i + 1;
+                    radioButton.value = pageVal;
+                    radioButton.onchange = function () {
+                        loadUserArticles(2);
+                    }
+                    if (page == pageVal) {
+                        radioButton.checked = true;
+                    }
+
+
+                    var label = document.createElement('label');
+                    label.className = 'btn btn-outline-info removeCorner';
+                    label.htmlFor = 'btnpagi' + i;
+                    label.innerText = pageVal;
+
+
+
+                    pagicontainer.appendChild(radioButton);
+                    pagicontainer.appendChild(label);
+
+                }
+
+
+                var lastpagi = document.createElement('input');
+                lastpagi.type = 'radio';
+                lastpagi.className = 'btn-check';
+                lastpagi.name = 'pagi';
+                lastpagi.id = 'lastpagi';
+
+                lastpagi.value = btnCount;
+                lastpagi.onchange = function () {
+                    loadUserArticles(2);
+                }
+
+
+
+                var lastlabel = document.createElement('label');
+                lastlabel.className = 'btn btn-outline-info removeCorner';
+                lastlabel.htmlFor = 'lastpagi';
+                lastlabel.innerText = "Last (" + btnCount + ")";
+
+
+
+                pagicontainer.appendChild(lastpagi);
+                pagicontainer.appendChild(lastlabel);
+
+
+
+
+            } else if (value.type = "error") {
+
+                tablebody.innerHTML = value.message;
+
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+
+
+}
+
+
 
