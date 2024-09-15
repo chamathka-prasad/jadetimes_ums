@@ -85,232 +85,351 @@ if (isset($_SESSION["jd_user"])) {
 					<div class="app-body">
 						<div class="row">
 
+							<?php
+							if ($user["user_type"] != "contributor") {
+							?>
 
-							<div class="col-12 col-xl-4 col-sm-6 col-12">
-								<div class="row">
-									<div class="col-12">
-										<div class="row">
-											<div class="col-12">
-												<div class="card mb-4">
-													<?php
-													$d = new DateTime();
-													$tz = new DateTimeZone("Asia/Colombo");
-													$d->setTimezone($tz);
-													$thisMonth = $d->format("Y-m");
-													$today = $d->format("Y-m-d");
-
-													$userResultCount = Database::operation("SELECT * FROM `attendance` WHERE `attendance`.`user_id`='" . $user["id"] . "' AND  `attendance`.`date_time`LIKE '" . $today . "%'", "s");
-													if ($userResultCount->num_rows == 1) {
-
-
-													?>
-														<div class="card-body d-flex align-items-center backGroundRed p-0">
-															<div class="p-4">
-																<i class="fs-1 lh-1 bi bi-check2-circle text-light"></i>
-															</div>
-															<div class="py-4">
-																<h5 class="text-light m-0">Today Attendance</h5>
-
-
-																<h1 class="m-0 text-light">SUBMITTED</h1>
-
-															</div>
-															<span class="badge backgroundColorChange text-light position-absolute top-0 end-0 m-3 "><?php echo $today ?></span>
-														</div>
-
-													<?php
-													} else {
-													?>
-														<div class="card-body d-flex align-items-center  p-0">
-															<div class="p-4">
-																<i class="bi bi-star fs-1 lh-1  textredChange"></i>
-															</div>
-															<div class="py-4">
-																<h5 class="text-secondary fw-light m-0">Today Attendance</h5>
-
-
-																<h1 class="m-0 text-light">NOT SUBMITTED</h1>
-
-															</div>
-															<span class="badge  backGroundRed position-absolute top-0 end-0 m-3 "><?php echo $today ?></span>
-														</div>
-													<?php
-													}
-													?>
-												</div>
-											</div>
-
-											<div class="col-12">
-												<div class="card mb-4">
-													<div class="card-body d-flex align-items-center p-0">
-														<div class="p-4">
-															<i class="bi bi-pie-chart fs-1 lh-1 text-dark "></i>
-														</div>
-														<div class="py-4">
-															<h5 class="text-secondary fw-light m-0">Attendance</h5>
-															<?php
-															$prev = 0;
-
-															$prevAttendance = Database::operation("SELECT user.prev_attendance  FROM `user` WHERE `user`.`id`='" . $user["id"] . "'", "s");
-															if ($prevAttendance->num_rows == 1) {
-																$prevCount = $prevAttendance->fetch_assoc();
-																if (!empty($prevCount["prev_attendance"])) {
-																	$prev = $prevCount["prev_attendance"];
-																}
-															}
-															$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `attendance` WHERE `attendance`.`user_id`='" . $user["id"] . "'", "s");
-															if ($userResultCount->num_rows == 1) {
-																$count = $userResultCount->fetch_assoc();
-
-															?>
-																<h1 class="m-0"><span id="count1" class="number"><?php
-
-
-																													echo ($count["total_rows"] + $prev);
-
-
-
-																													?></span> days</h1>
-															<?php
-															}
-															?>
-
-														</div>
-														<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">Total</span>
-													</div>
-												</div>
-											</div>
-
-
-
-										</div>
-									</div>
-									<div class="col-12">
+								<div class="col-12 col-xl-4 col-sm-6 col-12">
+									<div class="row">
 										<div class="col-12">
-											<div class="card mb-4 backgroundColorChange">
+											<div class="row">
+												<div class="col-12">
+													<div class="card mb-4">
+														<?php
+														$d = new DateTime();
+														$tz = new DateTimeZone("Asia/Colombo");
+														$d->setTimezone($tz);
+														$thisMonth = $d->format("Y-m");
+														$today = $d->format("Y-m-d");
 
-												<div class="card-body text-center">
-													<?php
-													$userTaskDataResult = Database::operation("SELECT * FROM `task` WHERE `task`.`user_id`='" . $user["id"] . "'", "s");
-													$userTask = "";
-													if ($userTaskDataResult->num_rows == 1) {
-														$userTaskData = $userTaskDataResult->fetch_assoc();
-														$userTask = $userTaskData["user_task"];
-													}
+														$userResultCount = Database::operation("SELECT * FROM `attendance` WHERE `attendance`.`user_id`='" . $user["id"] . "' AND  `attendance`.`date_time`LIKE '" . $today . "%'", "s");
+														if ($userResultCount->num_rows == 1) {
 
-													?>
 
-													<h5 class="mb-3 fw-bold text-light"><?php echo $user["position"] ?>'s Task</h5>
-													<p class="lh-base mb-4 text-light"><?php echo $userTask ?></p>
+														?>
+															<div class="card-body d-flex align-items-center backGroundRed p-0">
+																<div class="p-4">
+																	<i class="fs-1 lh-1 bi bi-check2-circle text-light"></i>
+																</div>
+																<div class="py-4">
+																	<h5 class="text-light m-0">Today Attendance</h5>
 
+
+																	<h1 class="m-0 text-light">SUBMITTED</h1>
+
+																</div>
+																<span class="badge backgroundColorChange text-light position-absolute top-0 end-0 m-3 "><?php echo $today ?></span>
+															</div>
+
+														<?php
+														} else {
+														?>
+															<div class="card-body d-flex align-items-center  p-0">
+																<div class="p-4">
+																	<i class="bi bi-star fs-1 lh-1  textredChange"></i>
+																</div>
+																<div class="py-4">
+																	<h5 class="text-secondary fw-light m-0">Today Attendance</h5>
+
+
+																	<h1 class="m-0 text-light">NOT SUBMITTED</h1>
+
+																</div>
+																<span class="badge  backGroundRed position-absolute top-0 end-0 m-3 "><?php echo $today ?></span>
+															</div>
+														<?php
+														}
+														?>
+													</div>
+												</div>
+
+												<div class="col-12">
+													<div class="card mb-4">
+														<div class="card-body d-flex align-items-center p-0">
+															<div class="p-4">
+																<i class="bi bi-pie-chart fs-1 lh-1 text-dark "></i>
+															</div>
+															<div class="py-4">
+																<h5 class="text-secondary fw-light m-0">Attendance</h5>
+																<?php
+																$prev = 0;
+
+																$prevAttendance = Database::operation("SELECT user.prev_attendance  FROM `user` WHERE `user`.`id`='" . $user["id"] . "'", "s");
+																if ($prevAttendance->num_rows == 1) {
+																	$prevCount = $prevAttendance->fetch_assoc();
+																	if (!empty($prevCount["prev_attendance"])) {
+																		$prev = $prevCount["prev_attendance"];
+																	}
+																}
+																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `attendance` WHERE `attendance`.`user_id`='" . $user["id"] . "'", "s");
+																if ($userResultCount->num_rows == 1) {
+																	$count = $userResultCount->fetch_assoc();
+
+																?>
+																	<h1 class="m-0"><span id="count1" class="number"><?php
+
+
+																														echo ($count["total_rows"] + $prev);
+
+
+
+																														?></span> days</h1>
+																<?php
+																}
+																?>
+
+															</div>
+															<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">Total</span>
+														</div>
+													</div>
+												</div>
+
+
+
+											</div>
+										</div>
+										<div class="col-12">
+											<div class="col-12">
+												<div class="card mb-4 backgroundColorChange">
+
+													<div class="card-body text-center">
+														<?php
+														$userTaskDataResult = Database::operation("SELECT * FROM `task` WHERE `task`.`user_id`='" . $user["id"] . "'", "s");
+														$userTask = "";
+														if ($userTaskDataResult->num_rows == 1) {
+															$userTaskData = $userTaskDataResult->fetch_assoc();
+															$userTask = $userTaskData["user_task"];
+														}
+
+														?>
+
+														<h5 class="mb-3 fw-bold text-light"><?php echo $user["position"] ?>'s Task</h5>
+														<p class="lh-base mb-4 text-light"><?php echo $userTask ?></p>
+
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-							<!-- Row ends -->
+								<!-- Row ends -->
 
 
 
 
-							<div class="col-xl-4 col-sm-6 col-12">
-								<div class="card mb-4">
-									<div class="card-header">
-										<h5 class="card-title">Leave Requests</h5>
-									</div>
-									<div class="card-body">
-										<div class="scroll350">
-
-											<?php
-
-											$leaveResultset = Database::operation("SELECT leave.leave_status_id,leave.reason,leave.leave_date,user.fname,user.lname FROM `leave` INNER JOIN `user` ON `user`.`id`=`leave`.`user_id` WHERE `leave`.`leave_date`>='" . $today . "' AND `leave`.`user_id`='" . $user["id"] . "' ORDER BY `leave`.`leave_date` DESC LIMIT 20 OFFSET 0", "s");
-											for ($i = 0; $i < $leaveResultset->num_rows; $i++) {
-												$pendingLeave = $leaveResultset->fetch_assoc();
-											?>
-												<div class="d-flex align-items-center mb-4">
-
-													<div class="m-0">
-														<h6 class="fw-bold"><?php echo $pendingLeave["fname"] . " " . $pendingLeave["lname"] ?></h6>
-														<p class="mb-2">
-
-															<?php echo substr($pendingLeave["reason"], 0, 20) ?>
-
-														</p>
-														<p class="small mb-2 text-secondary"><?php echo $pendingLeave["leave_date"] ?></p>
-													</div>
-													<?php if ($pendingLeave["leave_status_id"] == 1) {
-													?>
-														<span class="badge bg-info ms-auto">
-														<?php
-														echo "Pending";
-													} else if ($pendingLeave["leave_status_id"] == 2) {
-														?>
-															<span class="badge bg-success ms-auto">
-															<?php
-															echo "Approved";
-														} else {
-															?>
-																<span class="badge bg-danger ms-auto">
-																<?php
-																echo "Rejected";
-															} ?></span>
-												</div>
-											<?php
-
-											}
-
-											?>
+								<div class="col-xl-4 col-sm-6 col-12">
+									<div class="card mb-4">
+										<div class="card-header">
+											<h5 class="card-title">Leave Requests</h5>
 										</div>
-									</div>
-								</div>
-							</div>
-
-
-
-							<div class="col-xl-4 col-sm-12 col-12">
-								<div class="card mb-4">
-									<div class="card-header">
-										<h5 class="card-title">Recent Attendance</h5>
-									</div>
-									<div class="card-body">
-										<div class="scroll350">
-											<div class="d-grid  mt-4">
+										<div class="card-body">
+											<div class="scroll350">
 
 												<?php
-												$d = new DateTime();
-												$tz = new DateTimeZone("Asia/Colombo");
-												$d->setTimezone($tz);
-												$today = $d->format("Y-m-d");
-												$leaveResultset = Database::operation("SELECT attendance.date_time,user.fname,user.lname,profile_image.name FROM `attendance` INNER JOIN `user` ON `user`.`id`=`attendance`.`user_id` LEFT JOIN `profile_image` ON `user`.`id`=`profile_image`.`user_id` WHERE `user`.`id`='" . $user["id"] . "' ORDER BY `attendance`.`date_time` DESC LIMIT 20 OFFSET 0", "s");
+
+												$leaveResultset = Database::operation("SELECT leave.leave_status_id,leave.reason,leave.leave_date,user.fname,user.lname FROM `leave` INNER JOIN `user` ON `user`.`id`=`leave`.`user_id` WHERE `leave`.`leave_date`>='" . $today . "' AND `leave`.`user_id`='" . $user["id"] . "' ORDER BY `leave`.`leave_date` DESC LIMIT 20 OFFSET 0", "s");
 												for ($i = 0; $i < $leaveResultset->num_rows; $i++) {
 													$pendingLeave = $leaveResultset->fetch_assoc();
-
-													$dateSplit = explode(" ", $pendingLeave["date_time"]);
 												?>
-													<div class="d-flex align-items-center bg-success-subtle">
+													<div class="d-flex align-items-center mb-4">
 
-														<div class="d-flex flex-column">
-															<p class="ms-1 m-auto"><b><?php echo $dateSplit[0] ?></b></p>
+														<div class="m-0">
+															<h6 class="fw-bold"><?php echo $pendingLeave["fname"] . " " . $pendingLeave["lname"] ?></h6>
+															<p class="mb-2">
 
+																<?php echo substr($pendingLeave["reason"], 0, 20) ?>
+
+															</p>
+															<p class="small mb-2 text-secondary"><?php echo $pendingLeave["leave_date"] ?></p>
 														</div>
-														<p class=" ms-auto text-dark me-1"><?php echo $dateSplit[1] ?></p>
-
-
+														<?php if ($pendingLeave["leave_status_id"] == 1) {
+														?>
+															<span class="badge bg-info ms-auto">
+															<?php
+															echo "Pending";
+														} else if ($pendingLeave["leave_status_id"] == 2) {
+															?>
+																<span class="badge bg-success ms-auto">
+																<?php
+																echo "Approved";
+															} else {
+																?>
+																	<span class="badge bg-danger ms-auto">
+																	<?php
+																	echo "Rejected";
+																} ?></span>
 													</div>
-													<br>
 												<?php
 
 												}
 
 												?>
-
-
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+
+
+
+								<div class="col-xl-4 col-sm-12 col-12">
+									<div class="card mb-4">
+										<div class="card-header">
+											<h5 class="card-title">Recent Attendance</h5>
+										</div>
+										<div class="card-body">
+											<div class="scroll350">
+												<div class="d-grid  mt-4">
+
+													<?php
+													$d = new DateTime();
+													$tz = new DateTimeZone("Asia/Colombo");
+													$d->setTimezone($tz);
+													$today = $d->format("Y-m-d");
+													$leaveResultset = Database::operation("SELECT attendance.date_time,user.fname,user.lname,profile_image.name FROM `attendance` INNER JOIN `user` ON `user`.`id`=`attendance`.`user_id` LEFT JOIN `profile_image` ON `user`.`id`=`profile_image`.`user_id` WHERE `user`.`id`='" . $user["id"] . "' ORDER BY `attendance`.`date_time` DESC LIMIT 20 OFFSET 0", "s");
+													for ($i = 0; $i < $leaveResultset->num_rows; $i++) {
+														$pendingLeave = $leaveResultset->fetch_assoc();
+
+														$dateSplit = explode(" ", $pendingLeave["date_time"]);
+													?>
+														<div class="d-flex align-items-center bg-success-subtle">
+
+															<div class="d-flex flex-column">
+																<p class="ms-1 m-auto"><b><?php echo $dateSplit[0] ?></b></p>
+
+															</div>
+															<p class=" ms-auto text-dark me-1"><?php echo $dateSplit[1] ?></p>
+
+
+														</div>
+														<br>
+													<?php
+
+													}
+
+													?>
+
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php
+							} else {
+							?>
+								<div class="col-12">
+									<div class="row">
+										<div class="col-12 col-lg-4">
+											<div class="row">
+
+
+												<div class="col-12">
+													<div class="card mb-4">
+														<div class="card-body d-flex align-items-center p-0">
+															<div class="p-4">
+																<i class="bi bi-currency-dollar fs-1 lh-1 text-dark"></i>
+															</div>
+															<div class="py-4">
+																<h5 class="text-secondary fw-light m-0">Commercial</h5>
+																<?php
+														
+																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `article` WHERE `article`.`user_id`='" . $user["id"] . "' AND `article`.`type`='1'", "s");
+																if ($userResultCount->num_rows == 1) {
+																	$count = $userResultCount->fetch_assoc();
+
+																?>
+																	<h1 class="m-0"><span id="count1" class="number"><?php
+
+
+																														echo ($count["total_rows"]);
+
+
+
+																														?></span> Articles</h1>
+																<?php
+																}
+																?>
+
+															</div>
+
+														</div>
+													</div>
+												</div>
+
+
+
+											</div>
+										</div>
+										<div class="col-12 col-lg-4">
+											<div class="row">
+
+
+												<div class="col-12">
+													<div class="card mb-4">
+														<div class="card-body d-flex align-items-center p-0">
+															<div class="p-4">
+																<i class="bi bi-gift-fill fs-1 lh-1 text-dark"></i>
+															</div>
+															<div class="py-4">
+																<h5 class="text-secondary fw-light m-0">Non Commercial</h5>
+																<?php
+													
+																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `article` WHERE `article`.`user_id`='" . $user["id"] . "' AND `article`.`type`='2'", "s");
+																if ($userResultCount->num_rows == 1) {
+																	$count = $userResultCount->fetch_assoc();
+
+																?>
+																	<h1 class="m-0"><span id="count2" class="number"><?php
+
+
+																														echo ($count["total_rows"]);
+
+
+
+																														?></span> Articls</h1>
+																<?php
+																}
+																?>
+
+															</div>
+
+														</div>
+													</div>
+												</div>
+
+
+
+											</div>
+										</div>
+										<div class="col-12 col-lg-6">
+											<div class="col-12">
+												<div class="card mb-4 backgroundColorChange">
+
+													<div class="card-body text-center">
+														<?php
+														$userTaskDataResult = Database::operation("SELECT * FROM `task` WHERE `task`.`user_id`='" . $user["id"] . "'", "s");
+														$userTask = "";
+														if ($userTaskDataResult->num_rows == 1) {
+															$userTaskData = $userTaskDataResult->fetch_assoc();
+															$userTask = $userTaskData["user_task"];
+														}
+
+														?>
+
+														<h5 class="mb-3 fw-bold text-light"><?php echo $user["position"] ?>'s Task</h5>
+														<p class="lh-base mb-4 text-light"><?php echo $userTask ?></p>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php
+							}
+
+							?>
+
 
 
 						</div>
@@ -400,16 +519,15 @@ if (isset($_SESSION["jd_user"])) {
 				}
 				// Create multiple CountUp instances
 				const countUp1 = new CountUp("count1", 1, 20);
-
-
-
-
-
-
-				// Start counting
 				countUp1.start();
-
-
+				<?php
+				if ($user["user_type"] == "contributor") {
+				?>
+					const countUp2 = new CountUp("count2", 1, 20);
+					countUp2.start();
+				<?php
+				}
+				?>
 			});
 		</script>
 	</body>

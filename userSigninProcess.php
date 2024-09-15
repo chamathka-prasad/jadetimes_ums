@@ -29,7 +29,7 @@ $password = $send->password;
 $rememberPassword = $send->rememberPassword;
 
 $message = new stdClass();
-$results = Database::operation("SELECT `user`.`id`,`user`.`email`,`user`.`password`,`user`.`fname`,`user`.`lname`,`user`.`jid`,`type`.`name` AS `user_type`,`position`.`name` AS `position`,`department`.`name` AS `department`,`profile_image`.`name` AS `imgPath` FROM `user` INNER JOIN `type` ON  `type`.`id`=`user`.`type_id` INNER JOIN `user_status` ON `user`.`user_status_id`=`user_status`.`id` INNER JOIN `position` ON `position`.`id`=`user`.`position_id` INNER JOIN `department` ON `department`.`id`=`position`.`department_id` LEFT JOIN  `profile_image` ON `profile_image`.`user_id`=`user`.`id` WHERE `type`.`name` IN ('user','head') AND `user`.`email`='" . $email . "' AND `user`.`password`='" . $password . "' AND `user_status`.`name`='ACTIVE'", "s");
+$results = Database::operation("SELECT `user`.`id`,`user`.`email`,`user`.`password`,`user`.`fname`,`user`.`lname`,`user`.`jid`,`type`.`name` AS `user_type`,`position`.`name` AS `position`,`department`.`name` AS `department`,`profile_image`.`name` AS `imgPath`,`department`.`id` AS `department_id` FROM `user` INNER JOIN `type` ON  `type`.`id`=`user`.`type_id` INNER JOIN `user_status` ON `user`.`user_status_id`=`user_status`.`id` INNER JOIN `position` ON `position`.`id`=`user`.`position_id` INNER JOIN `department` ON `department`.`id`=`position`.`department_id` LEFT JOIN  `profile_image` ON `profile_image`.`user_id`=`user`.`id` WHERE `type`.`name` IN ('user','head','contributor') AND `user`.`email`='" . $email . "' AND `user`.`password`='" . $password . "' AND `user_status`.`name`='ACTIVE'", "s");
 
 if ($results->num_rows == 1) {
     $userDetails = $results->fetch_assoc();

@@ -4,7 +4,7 @@
 	<!-- App brand starts -->
 	<div class="app-brand p-4 mt-lg-0 mt-5">
 		<a href="adminPanel.php">
-			<img src="assets/img/darkLogo.png" style="height: 60px;width: auto;"  alt="Bootstrap Gallery" />
+			<img src="assets/img/darkLogo.png" style="height: 60px;width: auto;" alt="Bootstrap Gallery" />
 		</a>
 	</div>
 	<!-- App brand ends -->
@@ -38,6 +38,14 @@
 					<span class="menu-text">Manage Attendance</span>
 				</a>
 			</li>
+			<li class="<?php if ($currentPage == "manageArticles.php") {
+							echo "active current-page";
+						} ?>">
+				<a href="manageArticles.php">
+					<i class="bi bi-journal-bookmark"></i>
+					<span class="menu-text">Articles</span>
+				</a>
+			</li>
 			<li class="<?php if ($currentPage == "manageLeaves.php") {
 							echo "active current-page";
 						} ?>">
@@ -54,41 +62,42 @@
 					<span class="menu-text">Manage Positions</span>
 				</a>
 			</li>
+
 			<li>
 				<hr>
 			</li>
-			
-			
+
+
 			<?php
-			
-			if($_SESSION["jd_admin"]["user_type"]=="admin"){
-			    ?>
-			    <li class="<?php if ($currentPage == "adminAttendence.php") {
-							echo "active current-page";
-						} ?>">
-				<a href="adminAttendence.php">
-					<i class="bi bi-building"></i>
-					<span class="menu-text">My Attendence</span>
-				</a>
-			</li>
 
-
-
-			<li class="<?php if ($currentPage == "adminLeaves.php") {
-							echo "active current-page";
-						} ?>">
-				<a href="adminLeaves.php">
-					<i class="bi bi-calendar2-x"></i>
-					<span class="menu-text">My Leaves</span>
-				</a>
-			</li>
-			    
-			    <?php
-			    
-			}
-			
+			if ($_SESSION["jd_admin"]["user_type"] == "admin") {
 			?>
-			
+				<li class="<?php if ($currentPage == "adminAttendence.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="adminAttendence.php">
+						<i class="bi bi-building"></i>
+						<span class="menu-text">My Attendence</span>
+					</a>
+				</li>
+
+
+
+				<li class="<?php if ($currentPage == "adminLeaves.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="adminLeaves.php">
+						<i class="bi bi-calendar2-x"></i>
+						<span class="menu-text">My Leaves</span>
+					</a>
+				</li>
+
+			<?php
+
+			}
+
+			?>
+
 			<li class="<?php if ($currentPage == "adminProfile.php") {
 							echo "active current-page";
 						} ?>">
