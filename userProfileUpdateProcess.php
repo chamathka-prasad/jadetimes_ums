@@ -102,7 +102,7 @@ if (isset($_SESSION["jd_user"])) {
 
                 $fileName = uniqid() . $sessionUser["id"];
                 $savePath = $fileName . "." . $ext;
-                $path = "resources/profileImg/" . $fileName . "." . $ext;
+                $path = "./resources/profileImg/" . $fileName . "." . $ext;
 
                 $profileImgResult = Database::operation("SELECT * FROM `profile_image` WHERE `user_id`='" . $sessionUser["id"] . "'", "s");
                 if ($profileImgResult->num_rows == 1) {

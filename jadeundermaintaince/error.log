@@ -1,0 +1,11 @@
+[Sat Nov 02 15:03:26.351575 2024] [mpm_event:notice] [pid 111840:tid 139656401287040] AH00489: Apache/2.4.52 (Ubuntu) configured -- resuming normal operations
+[Sat Nov 02 15:03:26.351698 2024] [core:notice] [pid 111840:tid 139656401287040] AH00094: Command line: '/usr/sbin/apache2'
+[Sat Nov 02 15:49:20.208429 2024] [mpm_event:notice] [pid 111840:tid 139656401287040] AH00493: SIGUSR1 received.  Doing graceful restart
+[Sat Nov 02 15:49:20.218795 2024] [mpm_event:notice] [pid 111840:tid 139656401287040] AH00489: Apache/2.4.52 (Ubuntu) configured -- resuming normal operations
+[Sat Nov 02 15:49:20.218816 2024] [core:notice] [pid 111840:tid 139656401287040] AH00094: Command line: '/usr/sbin/apache2'
+[Sat Nov 02 15:49:32.298719 2024] [mpm_event:notice] [pid 111840:tid 139656401287040] AH00493: SIGUSR1 received.  Doing graceful restart
+[Sat Nov 02 15:49:32.306659 2024] [mpm_event:notice] [pid 111840:tid 139656401287040] AH00489: Apache/2.4.52 (Ubuntu) configured -- resuming normal operations
+[Sat Nov 02 15:49:32.306675 2024] [core:notice] [pid 111840:tid 139656401287040] AH00094: Command line: '/usr/sbin/apache2'
+[Sat Nov 02 15:49:42.657986 2024] [mpm_event:notice] [pid 111840:tid 139656401287040] AH00493: SIGUSR1 received.  Doing graceful restart
+[Sat Nov 02 15:49:42.667846 2024] [mpm_event:notice] [pid 111840:tid 139656401287040] AH00489: Apache/2.4.52 (Ubuntu) configured -- resuming normal operations
+[Sat Nov 02 15:49:42.667863 2024] [core:notice] [pid 111840:tid 139656401287040] AH00094: Command line: '/usr/sbin/apache2'

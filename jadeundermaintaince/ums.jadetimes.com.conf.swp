@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+    ServerName ums.jadetimes.com
+    ServerAlias ums.jadetimes.com
+
+    DocumentRoot /var/www/ums.jadetimes
+
+    <Directory /var/www/ums.jadetimes>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/ums.jadetimes.com_error.log
+    CustomLog ${APACHE_LOG_DIR}/ums.jadetimes.com_access.log combined
+</VirtualHost>

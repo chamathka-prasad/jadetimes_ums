@@ -21,7 +21,7 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-W
 
 // Ensure the response is JSON
 header("Content-Type: application/json");
-if (isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "head") {
+if (isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "head"||isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "director") {
 
     require "connection.php";
 

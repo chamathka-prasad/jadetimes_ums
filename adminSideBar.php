@@ -96,6 +96,24 @@
 
 			}
 
+			if ($_SESSION["jd_admin"]["user_type"] == "admin"||$_SESSION["jd_admin"]["user_type"] == "superAdmin") {
+				?>
+					<li class="<?php if ($currentPage == "manageFeedback.php") {
+									echo "active current-page";
+								} ?>">
+						<a href="manageFeedback.php">
+							<i class="bi bi-building"></i>
+							<span class="menu-text">Manage Feedback</span>
+						</a>
+					</li>
+	
+	
+	
+					
+	
+				<?php
+	
+				}
 			?>
 
 			<li class="<?php if ($currentPage == "adminProfile.php") {

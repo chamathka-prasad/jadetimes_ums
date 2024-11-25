@@ -37,9 +37,26 @@ if (isset($_SESSION["jd_user"])) {
 		<!-- Scrollbar CSS -->
 		<link rel="stylesheet" href="assets/vendor/overlay-scroll/OverlayScrollbars.min.css" />
 		<link rel="stylesheet" href="assets/css/user.css" />
+		<style>
+			.btn-outline-custom {
+				color: #181414;
+				border-color: #181414;
+			}
+
+			.btn-outline-custom:hover {
+				background-color: #181414;
+				color: #fff;
+			}
+
+			.btn-check:checked+.btn-outline-custom {
+				background-color: #181414;
+				color: #fff;
+				border-color: #181414;
+			}
+		</style>
 	</head>
 
-	<body class="backgroundColorChange">
+	<body class="backgroundColorChange" onload="userFeedBackRequest()">
 
 		<!-- Page wrapper start -->
 		<div class="page-wrapper">
@@ -86,12 +103,12 @@ if (isset($_SESSION["jd_user"])) {
 						<div class="row">
 
 							<?php
-							if ($user["user_type"] != "contributor") {
+							if ($user["user_type"] == "user" || $user["user_type"] == "head") {
 							?>
 
-								<div class="col-12 col-xl-4 col-sm-6 col-12">
+								<div class="col-12">
 									<div class="row">
-										<div class="col-12">
+										<div class="col-12 col-md-12  col-xl-4">
 											<div class="row">
 												<div class="col-12">
 													<div class="card mb-4">
@@ -188,7 +205,39 @@ if (isset($_SESSION["jd_user"])) {
 
 											</div>
 										</div>
-										<div class="col-12">
+										<div class="col-12 col-md-12 col-xl-4">
+											<div class="card mb-4">
+												<div class="card-body d-flex align-items-center p-0">
+													<div class="p-4">
+														<i class="bi bi-sticky fs-1 lh-1 text-dark"></i>
+													</div>
+													<div class="py-4">
+														<h5 class="text-secondary fw-light m-0">Remaining Leaves</h5>
+
+														<?php
+														$timezone = new DateTimeZone('Asia/Colombo');  // Set the timezone to Colombo
+														$date = new DateTime('now', $timezone);        // Get current date and time in Colombo timezone
+														$currentYearMonth = $date->format('Y-m');
+														$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `leave` WHERE `leave`.`leave_status_id` IN ('1','2','4') AND `leave`.`user_id`='" . $user["id"] . "' AND `leave`.`leave_date` LIKE '" . $currentYearMonth . "%'", "s");
+														if ($userResultCount->num_rows == 1) {
+															$count = $userResultCount->fetch_assoc();
+														?>
+															<h1 class="m-0 " id="count4"><?php echo 3 - $count["total_rows"] ?></h1>
+														<?php
+														}
+
+
+														?>
+
+
+
+
+													</div>
+													<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 "><?php echo $currentYearMonth ?></span>
+												</div>
+											</div>
+										</div>
+										<div class="col-12 col-md-12 col-xl-4">
 											<div class="col-12">
 												<div class="card mb-4 backgroundColorChange">
 
@@ -315,7 +364,7 @@ if (isset($_SESSION["jd_user"])) {
 									</div>
 								</div>
 							<?php
-							} else {
+							} else if ($user["user_type"] == "contributor") {
 							?>
 								<div class="col-12">
 									<div class="row">
@@ -332,7 +381,7 @@ if (isset($_SESSION["jd_user"])) {
 															<div class="py-4">
 																<h5 class="text-secondary fw-light m-0">Commercial</h5>
 																<?php
-														
+
 																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `article` WHERE `article`.`user_id`='" . $user["id"] . "' AND `article`.`type`='1'", "s");
 																if ($userResultCount->num_rows == 1) {
 																	$count = $userResultCount->fetch_assoc();
@@ -373,7 +422,7 @@ if (isset($_SESSION["jd_user"])) {
 															<div class="py-4">
 																<h5 class="text-secondary fw-light m-0">Non Commercial</h5>
 																<?php
-													
+
 																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `article` WHERE `article`.`user_id`='" . $user["id"] . "' AND `article`.`type`='2'", "s");
 																if ($userResultCount->num_rows == 1) {
 																	$count = $userResultCount->fetch_assoc();
@@ -426,6 +475,38 @@ if (isset($_SESSION["jd_user"])) {
 									</div>
 								</div>
 							<?php
+							} else {
+
+							?>
+								<div class="col-12">
+									<div class="row">
+										
+										
+										<div class="col-12 col-lg-6">
+											<div class="col-12">
+												<div class="card mb-4 backgroundColorChange">
+
+													<div class="card-body text-center">
+														<?php
+														$userTaskDataResult = Database::operation("SELECT * FROM `task` WHERE `task`.`user_id`='" . $user["id"] . "'", "s");
+														$userTask = "";
+														if ($userTaskDataResult->num_rows == 1) {
+															$userTaskData = $userTaskDataResult->fetch_assoc();
+															$userTask = $userTaskData["user_task"];
+														}
+
+														?>
+
+														<h5 class="mb-3 fw-bold text-light"><?php echo $user["position"] ?>'s Task</h5>
+														<p class="lh-base mb-4 text-light"><?php echo $userTask ?></p>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php
 							}
 
 							?>
@@ -449,6 +530,70 @@ if (isset($_SESSION["jd_user"])) {
 			</div>
 			<!-- Main container end -->
 
+		</div>
+
+
+		<!-- Modal Structure -->
+		<div class="modal fade" id="autoModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Hello User !!</h5>
+					</div>
+					<div class="modal-body">
+						<p id="feedbackMessage">You have been working with us for over three months. We would love to hear your feedback about any issues, complaints,
+							or what you've learned from your experience with Jadeimes.</p>
+
+						<div class="col-12">
+							<div class="row">
+								<div class="container mt-1">
+									<div class="card shadow-sm">
+										<div class="card-header backgroundColorChange removeCorner text-white">
+											<h5 class="mb-0">Rate Your Experience</h5>
+											<span id="feedbackId" class="d-none"></span>
+										</div>
+										<div class="card-body">
+											<form id="feedbackForm">
+												<!-- Rating Section -->
+												<div class="mb-4">
+													<label for="rating" class="form-label">Rate Us (1 to 5):</label>
+													<div id="rating" class="d-flex gap-2">
+														<input type="radio" class="btn-check" name="rating" id="rate1" value="1" required>
+														<label class="btn btn-outline-custom  removeCorner" for="rate1">1</label>
+
+														<input type="radio" class="btn-check" name="rating" id="rate2" value="2">
+														<label class="btn btn-outline-custom  removeCorner" for="rate2">2</label>
+
+														<input type="radio" class="btn-check" name="rating" id="rate3" value="3">
+														<label class="btn btn-outline-custom  removeCorner" for="rate3">3</label>
+
+														<input type="radio" class="btn-check" name="rating" id="rate4" value="4">
+														<label class="btn btn-outline-custom  removeCorner" for="rate4">4</label>
+
+														<input type="radio" class="btn-check" name="rating" id="rate5" value="5">
+														<label class="btn btn-outline-custom  removeCorner" for="rate5">5</label>
+													</div>
+												</div>
+
+												<!-- Feedback Text Area -->
+												<div class="mb-4">
+													<label for="feedback" class="form-label">Your Feedback:</label>
+													<textarea class="form-control" id="feedback" name="feedback" rows="4" placeholder="Share your thoughts..." required></textarea>
+												</div>
+
+												<!-- Submit Button -->
+												<div class="text-end">
+													<button type="submit" class="btn btn-dark backgroundColorChange removeCorner">Submit</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<!-- Page wrapper end -->
 
@@ -480,8 +625,13 @@ if (isset($_SESSION["jd_user"])) {
 
 		<!-- Custom JS files -->
 		<script src="assets/js/custom.js"></script>
+		<script src="assets/js/user.js"></script>
 		<script>
 			document.addEventListener("DOMContentLoaded", function() {
+
+
+
+
 				function CountUp(elementId, increment, interval = 1000) {
 					this.element = document.getElementById(elementId);
 

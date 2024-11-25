@@ -192,7 +192,7 @@ if (isset($_SESSION["jd_user"])) {
 																						$resultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `article` WHERE `user_id`='" . $userSession["id"] . "'", "s");
 																						$resultRows = $resultCount->fetch_assoc();
 																						$count = $resultRows["total_rows"];
-																						$pagesCount = round($count / 50)+1;
+																						$pagesCount = round($count / 50) + 1;
 
 																						for ($p = 1; $p <= $pagesCount; $p++) {
 																						?>
@@ -325,6 +325,13 @@ if (isset($_SESSION["jd_user"])) {
 		<script src="assets/js/custom.js"></script>
 		<script src="assets/js/user.js"></script>
 		<script>
+			document.getElementById('title').addEventListener('paste', function(event) {
+				event.preventDefault();
+				let paste = (event.clipboardData || window.clipboardData).getData('text');
+				paste = paste.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); // Remove control characters
+				document.getElementById('title').value = paste.trim(); // Clean and trim the pasted input
+			});
+
 			function addNewArticle() {
 				var msg = document.getElementById("infoMessage");
 				var title = document.getElementById("title");

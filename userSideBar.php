@@ -24,15 +24,28 @@
 
 			<?php
 
-			if ($_SESSION["jd_user"]["user_type"] != "contributor") {
+			if ($_SESSION["jd_user"]["user_type"] == "contributor") {
 			?>
 
+				<li class="<?php if ($currentPage == "contributorsArticle.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="contributorsArticle.php">
+						<i class="bi bi-journal-bookmark"></i>
+						<span class="menu-text">My Article</span>
+					</a>
+				</li>
+			<?php
+			} else if ($_SESSION["jd_user"]["user_type"] == "director") {
+
+			} else {
+			?>
 				<li class="<?php if ($currentPage == "userAttendence.php") {
 								echo "active current-page";
 							} ?>">
 					<a href="userAttendence.php">
 						<i class="bi bi-building"></i>
-						<span class="menu-text">Attendence</span>
+						<span class="menu-text">Calender/Attendence</span>
 					</a>
 				</li>
 				<li class="<?php if ($currentPage == "userLeaves.php") {
@@ -41,17 +54,6 @@
 					<a href="userLeaves.php">
 						<i class="bi bi-calendar2-x"></i>
 						<span class="menu-text">Leave Request</span>
-					</a>
-				</li>
-			<?php
-			} else {
-			?>
-				<li class="<?php if ($currentPage == "contributorsArticle.php") {
-								echo "active current-page";
-							} ?>">
-					<a href="contributorsArticle.php">
-						<i class="bi bi-journal-bookmark"></i>
-						<span class="menu-text">My Article</span>
 					</a>
 				</li>
 			<?php
@@ -73,7 +75,7 @@
 
 			<?php
 
-			if ($_SESSION["jd_user"]["user_type"] == "head") {
+			if ($_SESSION["jd_user"]["user_type"] == "head"||$_SESSION["jd_user"]["user_type"] == "director") {
 			?>
 				<li class="">
 					<hr>

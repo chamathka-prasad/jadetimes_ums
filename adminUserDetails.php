@@ -146,10 +146,10 @@ if (isset($_SESSION["jd_admin"])) {
 													?>
 													<div class="tab-pane fade show active" id="oneAAAA" role="tabpanel">
 														<?php
-														if ($Profile["user_typeid"] != 3) {
+														if ($Profile["user_typeid"] != 3 && $Profile["user_typeid"] != 5) {
 														?>
 															<div class="row">
-																<div class="col-12">
+																<div class="col-12 col-md-12 col-xl-4">
 																	<div class="card mb-4 bg-secondary">
 																		<div class="card-body d-flex align-items-center p-0">
 																			<div class="p-4">
@@ -189,6 +189,71 @@ if (isset($_SESSION["jd_admin"])) {
 																		</div>
 																	</div>
 																</div>
+																<div class="col-12 col-md-12 col-xl-4">
+																	<div class="card mb-4 bg-danger-subtle">
+																		<div class="card-body d-flex align-items-center p-0 ">
+																			<div class="p-4">
+																				<i class="bi bi-sticky fs-1 lh-1 text-dark"></i>
+																			</div>
+																			<div class="py-4">
+																				<h5 class="text-secondary fw-light m-0">Total Leaves</h5>
+
+																				<?php
+																					$timezone = new DateTimeZone('Asia/Colombo');  // Set the timezone to Colombo
+																					$date = new DateTime('now', $timezone);        // Get current date and time in Colombo timezone
+																					$currentYearMonth = $date->format('Y-m');
+																					$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `leave` WHERE `leave`.`leave_status_id` IN ('1','2','4','5') AND `leave`.`user_id`='" . $Profile["id"] . "' AND `leave`.`leave_date` LIKE '" . $currentYearMonth . "%'", "s");
+																					if ($userResultCount->num_rows == 1) {
+																						$count = $userResultCount->fetch_assoc();
+																				?>
+																					<h1 class="m-0 " id="count4"><?php echo $count["total_rows"] ?></h1>
+																				<?php
+																					}
+
+
+																				?>
+
+
+
+
+																			</div>
+																			<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">All</span>
+																		</div>
+																	</div>
+																</div>
+																<div class="col-12 col-md-12 col-xl-4">
+																	<div class="card mb-4 bg-info-subtle">
+																		<div class="card-body d-flex align-items-center p-0 ">
+																			<div class="p-4">
+																				<i class="bi bi-sticky fs-1 lh-1 text-dark"></i>
+																			</div>
+																			<div class="py-4">
+																				<h5 class="text-secondary fw-light m-0">Remaining Leaves</h5>
+
+																				<?php
+																					$timezone = new DateTimeZone('Asia/Colombo');  // Set the timezone to Colombo
+																					$date = new DateTime('now', $timezone);        // Get current date and time in Colombo timezone
+																					$currentYearMonth = $date->format('Y-m');
+																					$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `leave` WHERE `leave`.`leave_status_id` IN ('1','2','4') AND `leave`.`user_id`='" . $Profile["id"] . "' AND `leave`.`leave_date` LIKE '" . $currentYearMonth . "%'", "s");
+																					if ($userResultCount->num_rows == 1) {
+																						$count = $userResultCount->fetch_assoc();
+																				?>
+																					<h1 class="m-0 " id="count4"><?php echo 3 - $count["total_rows"] ?></h1>
+																				<?php
+																					}
+
+
+																				?>
+
+
+
+
+																			</div>
+																			<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 "><?php echo $currentYearMonth ?></span>
+																		</div>
+																	</div>
+																</div>
+
 															</div>
 													<?php
 																				}
@@ -331,7 +396,7 @@ if (isset($_SESSION["jd_admin"])) {
 																					?>
 																							<option value="<?php echo $genderId ?>" <?php if ($genderId == $Profile["genderId"]) {
 																																	?>selected<?php
-																																					} ?>><?php echo $genders["name"] ?></option>
+																																			} ?>><?php echo $genders["name"] ?></option>
 																					<?php
 																						}
 																					}
@@ -533,7 +598,7 @@ if (isset($_SESSION["jd_admin"])) {
 																				?>
 																						<option value="<?php echo $cityId ?>" <?php if ($cityId == $conId) {
 																																?>selected<?php
-																																				} ?>><?php echo $city["name"] ?></option>
+																																		} ?>><?php echo $city["name"] ?></option>
 																				<?php
 																					}
 																				}

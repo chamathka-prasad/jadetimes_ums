@@ -1,4 +1,4 @@
-var baseUrl="";
+var baseUrl = "";
 
 function markAttendence() {
 
@@ -178,10 +178,10 @@ function loadUserLeaves(stat) {
                     } else if (user[5] == 2) {
                         salaryCell.innerText = "Approved";
                         salaryCell.classList = "bg-success text-black text-center";
-                    } else if(user[5] == 3) {
+                    } else if (user[5] == 3) {
                         salaryCell.innerText = "Rejected";
                         salaryCell.classList = "bg-danger text-black text-center";
-                    }else{
+                    } else {
                         salaryCell.innerText = "Emergency";
                         salaryCell.classList = "bg-warning text-black text-center";
                     }
@@ -649,7 +649,7 @@ function loadUserAttendanceHead(stat) {
             } else if (value.type = "error") {
 
                 tablebody.innerHTML = value.message;
-                 document.getElementById("markedCount").innerText = "0";
+                document.getElementById("markedCount").innerText = "0";
                 document.getElementById("notMarkedCount").innerText = "0";
 
             }
@@ -1008,39 +1008,39 @@ function loadUserAttendance() {
                 for (let index = 0; index < value.leave.length; index++) {
                     const element = value.leave[index];
                     var fetchDate = element[0];
-                    if(element[1]==2){
-                     
-                    let component = {
-                        title: "Normal Leave",
-                        start: fetchDate,
-                        color: "#ff0d0d",
-                        constraint: 'availableForMeeting',
+                    if (element[1] == 2) {
 
-                    };
-                    eventArray.push(component);
-                    }else if(element[1]==4){
-                  
-                    let component = {
-                        title: "Emergancy Leave",
-                        start: fetchDate,
-                        color: "#ffcc00",
-                        constraint: 'availableForMeeting',
+                        let component = {
+                            title: "Normal Leave",
+                            start: fetchDate,
+                            color: "#ff0d0d",
+                            constraint: 'availableForMeeting',
 
-                    };
-                    eventArray.push(component);
-                    }else{
-              
-                    let component = {
-                        title: "Special Leave",
-                        start: fetchDate,
-                        color: "#cc3300",
-                        constraint: 'availableForMeeting',
+                        };
+                        eventArray.push(component);
+                    } else if (element[1] == 4) {
 
-                    };
-                    eventArray.push(component);
+                        let component = {
+                            title: "Emergancy Leave",
+                            start: fetchDate,
+                            color: "#ffcc00",
+                            constraint: 'availableForMeeting',
+
+                        };
+                        eventArray.push(component);
+                    } else {
+
+                        let component = {
+                            title: "Special Leave",
+                            start: fetchDate,
+                            color: "#cc3300",
+                            constraint: 'availableForMeeting',
+
+                        };
+                        eventArray.push(component);
                     }
-                        
-               
+
+
                 }
 
 
@@ -1160,7 +1160,7 @@ function loadUserArticles(stat) {
                     idCell.textContent = user[3];
 
                     const roleCell = document.createElement('td');
-                    roleCell.textContent = user[0] + " " + user[1]+" "+user[2];
+                    roleCell.textContent = user[0] + " " + user[1] + " " + user[2];
 
                     const addressCell = document.createElement('td');
                     addressCell.textContent = user[5];
@@ -1179,7 +1179,7 @@ function loadUserArticles(stat) {
                     } else if (user[7] == 2) {
                         salaryCell.innerText = "non Commercial";
                         salaryCell.classList = "text-black text-center";
-                    } 
+                    }
 
 
 
@@ -1341,6 +1341,71 @@ function loadUserArticles(stat) {
             } else if (value.type = "error") {
 
                 tablebody.innerHTML = value.message;
+
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+
+
+}
+
+
+function userFeedBackRequest() {
+
+    const myModal = new bootstrap.Modal(document.getElementById('autoModal'));
+    fetch(baseUrl + "feedBackLoadProcesToUser.php", {
+        method: "GET",
+    }).then(function (resp) {
+        return resp.json();
+
+    })
+        .then(function (value) {
+
+
+            if (value.type == "success") {
+
+                document.getElementById("feedbackMessage").innerHTML = value.message.message;
+                myModal.show();
+
+                document.getElementById('feedbackForm').addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    const rating = document.querySelector('input[name="rating"]:checked').value;
+                    const feedback = document.getElementById('feedback').value;
+
+
+                    var formData = new FormData();
+                    formData.append("rating", rating);
+                    formData.append("feedback", feedback);
+                    formData.append("fid", value.message.id);
+
+                    fetch(baseUrl + "feedbackProcess.php", {
+                        method: "POST",
+                        body: formData,
+                    }).then(function (resp) {
+                        return resp.json();
+
+                    })
+                        .then(function (value) {
+
+
+                            if (value.type == "success") {
+                                alert("Success");
+                                myModal.hide();
+
+                            } else if (value.type = "error") {
+                                alert("somthing went wrong");
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+                });
+
+            } else if (value.type = "error") {
 
             }
         })

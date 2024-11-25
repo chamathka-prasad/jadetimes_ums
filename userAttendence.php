@@ -261,6 +261,14 @@ if (isset($_SESSION["jd_user"])) {
 		<script src="assets/js/custom.js"></script>
 		<script src="assets/js/user.js"></script>
 	</body>
+	<script>
+		document.getElementById('task').addEventListener('paste', function(event) {
+			event.preventDefault();
+			let paste = (event.clipboardData || window.clipboardData).getData('text');
+			paste = paste.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); // Remove control characters
+			document.getElementById('task').value = paste.trim(); // Clean and trim the pasted input
+		});
+	</script>
 
 	</html>
 <?php

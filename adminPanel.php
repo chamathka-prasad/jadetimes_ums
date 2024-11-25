@@ -37,6 +37,23 @@ if (isset($_SESSION["jd_admin"])) {
 		<!-- Scrollbar CSS -->
 		<link rel="stylesheet" href="assets/vendor/overlay-scroll/OverlayScrollbars.min.css" />
 		<link rel="stylesheet" href="assets/css/admin.css" />
+		<style>
+			.btn-outline-custom {
+				color: #181414;
+				border-color: #181414;
+			}
+
+			.btn-outline-custom:hover {
+				background-color: #181414;
+				color: #fff;
+			}
+
+			.btn-check:checked+.btn-outline-custom {
+				background-color: #181414;
+				color: #fff;
+				border-color: #181414;
+			}
+		</style>
 	</head>
 
 	<body class="backgroundColorChange" onload="loadUserAttendanceTODashBoard(0)">
@@ -362,6 +379,8 @@ if (isset($_SESSION["jd_admin"])) {
 
 								</div>
 							</div>
+
+
 						<?php
 						}
 						?>
@@ -475,7 +494,7 @@ if (isset($_SESSION["jd_admin"])) {
 											$newDate =  date('Y-m-d', strtotime($d->format('Y-m-d') . ' - 4 days'));
 
 
-											$userResultSearch = Database::operation("SELECT user.id,user.fname,user.lname,user.email,user.mobile,user.jid,user.reg_date,profile_image.name FROM `user` LEFT JOIN `profile_image` ON `profile_image`.`user_id`=`user`.`id` WHERE `user`.`user_status_id`='1' AND `user`.`type_id`!='3'", "s");
+											$userResultSearch = Database::operation("SELECT user.id,user.fname,user.lname,user.email,user.mobile,user.jid,user.reg_date,profile_image.name FROM `user` LEFT JOIN `profile_image` ON `profile_image`.`user_id`=`user`.`id` WHERE `user`.`user_status_id`='1' AND `user`.`type_id`IN('1','2','4')", "s");
 
 											$userResultsForCheckAttendance = [];
 											$lastSearchForUserDatas = [];
@@ -628,6 +647,68 @@ if (isset($_SESSION["jd_admin"])) {
 			<!-- Main container end -->
 
 		</div>
+		<!-- Modal Structure -->
+		<div class="modal fade" id="autoModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Hello Admin !!</h5>
+					</div>
+					<div class="modal-body">
+						<p id="feedbackMessage">You have been working with us for over three months. We would love to hear your feedback about any issues, complaints,
+							or what you've learned from your experience with Jadeimes.</p>
+
+						<div class="col-12">
+							<div class="row">
+								<div class="container mt-1">
+									<div class="card shadow-sm">
+										<div class="card-header backgroundColorChange removeCorner text-white">
+											<h5 class="mb-0">Rate Your Experience</h5>
+											<span id="feedbackId" class="d-none"></span>
+										</div>
+										<div class="card-body">
+											<form id="feedbackForm">
+												<!-- Rating Section -->
+												<div class="mb-4">
+													<label for="rating" class="form-label">Rate Us (1 to 5):</label>
+													<div id="rating" class="d-flex gap-2">
+														<input type="radio" class="btn-check" name="rating" id="rate1" value="1" required>
+														<label class="btn btn-outline-custom  removeCorner" for="rate1">1</label>
+
+														<input type="radio" class="btn-check" name="rating" id="rate2" value="2">
+														<label class="btn btn-outline-custom  removeCorner" for="rate2">2</label>
+
+														<input type="radio" class="btn-check" name="rating" id="rate3" value="3">
+														<label class="btn btn-outline-custom  removeCorner" for="rate3">3</label>
+
+														<input type="radio" class="btn-check" name="rating" id="rate4" value="4">
+														<label class="btn btn-outline-custom  removeCorner" for="rate4">4</label>
+
+														<input type="radio" class="btn-check" name="rating" id="rate5" value="5">
+														<label class="btn btn-outline-custom  removeCorner" for="rate5">5</label>
+													</div>
+												</div>
+
+												<!-- Feedback Text Area -->
+												<div class="mb-4">
+													<label for="feedback" class="form-label">Your Feedback:</label>
+													<textarea class="form-control" id="feedback" name="feedback" rows="4" placeholder="Share your thoughts..." required></textarea>
+												</div>
+
+												<!-- Submit Button -->
+												<div class="text-end">
+													<button type="submit" class="btn btn-dark backgroundColorChange removeCorner">Submit</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- Page wrapper end -->
 
 		<!-- *************
@@ -659,7 +740,16 @@ if (isset($_SESSION["jd_admin"])) {
 		<!-- Custom JS files -->
 		<script src="assets/js/custom.js"></script>
 		<script src="assets/js/admin.js"></script>
-		<script>
+
+
+		<?php
+
+		if ($admin["user_type"] == "admin") {
+			?>
+			<script>userFeedBackRequest();</script>
+			<?php
+		}
+		?> <script>
 			document.addEventListener("DOMContentLoaded", function() {
 				function CountUp(elementId, increment, interval = 1000) {
 					this.element = document.getElementById(elementId);
@@ -711,7 +801,7 @@ if (isset($_SESSION["jd_admin"])) {
 				countUp2.start();
 				countUp4.start();
 				if (document.getElementById("count3")) {
-					const countUp3 = new CountUp("count3",2,50);
+					const countUp3 = new CountUp("count3", 2, 50);
 					countUp3.start();
 
 				}

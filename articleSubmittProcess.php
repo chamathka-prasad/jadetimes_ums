@@ -39,6 +39,8 @@ if (isset($_SESSION["jd_user"])) {
 
     $message = new stdClass();
 
+    $title = strip_tags($title);
+    $title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
     $results = Database::operation("SELECT * FROM `user` WHERE `id`='" . $userSession["id"] . "'", "s");
 

@@ -97,7 +97,7 @@ if (isset($_SESSION["jd_admin"])) {
         $message->type = "error";
         $message->message = "Select a user type";
         echo json_encode($message);
-    } else if ((!empty($no) || !empty($line1) || !empty($line2) || !empty($city) || $countryId != 0) && (empty($line1) || empty($city) || $countryId == 0)) {
+    } else if ((empty($line1) || empty($city) || $countryId == 0)) {
         $message->type = "error";
         $message->message = "If you are adding an address to the user     line1, city and country must be filled or selected. Also, you can register a user without adding an address by keeping the fields empty and disselecting.";
         echo json_encode($message);
@@ -146,8 +146,13 @@ if (isset($_SESSION["jd_admin"])) {
                         }
                     }
                 }
+                $updateQuery = "";
+                if (!empty($dob)) {
+               
+                    $updateQuery = ",`user`.`dob`='" . $dob . "'";
+                }
 
-                Database::operation("UPDATE `user` SET `user`.`sname`='" . $sname . "',`user`.`fname`='" . $fname . "',`user`.`mname`='" . $mname . "',`user`.`lname`='" . $lname . "',`user`.`mobile`='" . $mobile . "',`user`.`nic`='" . $nic . "',`user`.`dob`='" . $dob . "',`user`.`duration`='" . $duration . "',`user`.`linkdin`='" . $linkdin . "',`user`.`gender_id`='" . $gender . "',`user`.`position_id`='" . $position . "' " . $typeQuery . " WHERE user.email='" . $email . "'", "iud");
+                Database::operation("UPDATE `user` SET `user`.`sname`='" . $sname . "',`user`.`fname`='" . $fname . "',`user`.`mname`='" . $mname . "',`user`.`lname`='" . $lname . "',`user`.`mobile`='" . $mobile . "',`user`.`nic`='" . $nic . "',`user`.`duration`='" . $duration . "',`user`.`linkdin`='" . $linkdin . "',`user`.`gender_id`='" . $gender . "',`user`.`position_id`='" . $position . "' " . $typeQuery . " ".$updateQuery." WHERE user.email='" . $email . "'", "iud");
 
 
 
@@ -176,7 +181,7 @@ if (isset($_SESSION["jd_admin"])) {
 
                     $fileName = uniqid() . $sessionAdmin["id"];
                     $savePath = $fileName . "." . $ext;
-                    $path = "resources/profileImg/" . $fileName . "." . $ext;
+                    $path = "./resources/profileImg/" . $fileName . "." . $ext;
 
                     $profileImgResult = Database::operation("SELECT * FROM `profile_image` WHERE `user_id`='" .  $userDetails["id"] . "'", "s");
                     if ($profileImgResult->num_rows == 1) {

@@ -95,14 +95,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 
 						<div class="row">
-							<div class="col-12">
-								<p class="d-inline-flex gap-1">
-
-									<button type="button" class="btn btn-dark backgroundColorChange removeCorner" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-										<i class="bi bi-calendar2-plus"></i>
-									</button>
-								</p>
-							</div>
+							
 							<!-- Button trigger modal -->
 
 

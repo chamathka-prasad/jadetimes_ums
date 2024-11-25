@@ -1,7 +1,7 @@
 <?php
 session_start();
 require "connection.php";
-if (isset($_SESSION["jd_user"])) {
+if (isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "head"||isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "director") {
 
 	$admin = $_SESSION["jd_user"];
 
@@ -94,7 +94,7 @@ if (isset($_SESSION["jd_user"])) {
 						?>
 
 
-						<div class="row">
+						<!-- <div class="row">
 							<div class="col-12">
 								<p class="d-inline-flex gap-1">
 
@@ -103,10 +103,7 @@ if (isset($_SESSION["jd_user"])) {
 									</button>
 								</p>
 							</div>
-							<!-- Button trigger modal -->
-
-
-							<!-- Modal -->
+						
 							<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 								<div class="modal-dialog">
 									<div class="modal-content">
@@ -173,7 +170,7 @@ if (isset($_SESSION["jd_user"])) {
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
 
 						<div class="row">
 							<div class="col-lg-3 col-sm-4 col-12">

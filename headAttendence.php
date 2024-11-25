@@ -3,7 +3,7 @@ session_start();
 require "connection.php";
 if (isset($_SESSION["jd_user"])) {
 	$admin = $_SESSION["jd_user"];
-	if ($admin["user_type"] == "head") {
+	if ($admin["user_type"] == "head"||$admin["user_type"] == "director") {
 
 
 

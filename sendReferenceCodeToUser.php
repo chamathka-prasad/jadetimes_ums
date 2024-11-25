@@ -48,7 +48,7 @@ if (empty($email)) {
 
         $mail = new PHPMailer;
         $mail->IsSMTP();
-        $mail->Host = 'ums.jadetimes.com';
+        $mail->Host = 'mail.specialgraphics.us';
         $mail->SMTPAuth = true;
         $mail->Username = 'no-reply@ums.jadetimes.com';
         $mail->Password = 'jadeTimesEmailSystem';

@@ -1,7 +1,7 @@
 <?php
 session_start();
 require "connection.php";
-if (isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "head") {
+if (isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "head"||isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "director") {
 
 	$admin = $_SESSION["jd_user"];
 
