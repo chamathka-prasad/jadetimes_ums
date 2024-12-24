@@ -106,11 +106,11 @@ if (isset($_SESSION["jd_user"])) {
 							if ($user["user_type"] == "user" || $user["user_type"] == "head") {
 							?>
 
-								<div class="col-12">
+								<div class="col-12 ">
 									<div class="row">
-										<div class="col-12 col-md-12  col-xl-4">
+										<div class="col-12 col-md-12  col-xl-8">
 											<div class="row">
-												<div class="col-12">
+												<div class="col-12 col-lg-6">
 													<div class="card mb-4">
 														<?php
 														$d = new DateTime();
@@ -160,7 +160,7 @@ if (isset($_SESSION["jd_user"])) {
 													</div>
 												</div>
 
-												<div class="col-12">
+												<div class="col-12 col-lg-6">
 													<div class="card mb-4">
 														<div class="card-body d-flex align-items-center p-0">
 															<div class="p-4">
@@ -201,64 +201,88 @@ if (isset($_SESSION["jd_user"])) {
 													</div>
 												</div>
 
+												<div class="col-12 col-md-12 col-lg-6">
+													<div class="card mb-4">
+														<div class="card-body d-flex align-items-center p-0">
+															<div class="p-4">
+																<i class="bi bi-sticky fs-1 lh-1 text-dark"></i>
+															</div>
+															<div class="py-4">
+																<h5 class="text-secondary fw-light m-0">Remaining Leaves</h5>
+
+																<?php
+																$timezone = new DateTimeZone('Asia/Colombo');  // Set the timezone to Colombo
+																$date = new DateTime('now', $timezone);        // Get current date and time in Colombo timezone
+																$currentYearMonth = $date->format('Y-m');
+																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `leave` WHERE `leave`.`leave_status_id` IN ('1','2','4') AND `leave`.`user_id`='" . $user["id"] . "' AND `leave`.`leave_date` LIKE '" . $currentYearMonth . "%'", "s");
+																if ($userResultCount->num_rows == 1) {
+																	$count = $userResultCount->fetch_assoc();
+																?>
+																	<h1 class="m-0 " id="count4"><?php echo 3 - $count["total_rows"] ?></h1>
+																<?php
+																}
 
 
-											</div>
-										</div>
-										<div class="col-12 col-md-12 col-xl-4">
-											<div class="card mb-4">
-												<div class="card-body d-flex align-items-center p-0">
-													<div class="p-4">
-														<i class="bi bi-sticky fs-1 lh-1 text-dark"></i>
-													</div>
-													<div class="py-4">
-														<h5 class="text-secondary fw-light m-0">Remaining Leaves</h5>
-
-														<?php
-														$timezone = new DateTimeZone('Asia/Colombo');  // Set the timezone to Colombo
-														$date = new DateTime('now', $timezone);        // Get current date and time in Colombo timezone
-														$currentYearMonth = $date->format('Y-m');
-														$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `leave` WHERE `leave`.`leave_status_id` IN ('1','2','4') AND `leave`.`user_id`='" . $user["id"] . "' AND `leave`.`leave_date` LIKE '" . $currentYearMonth . "%'", "s");
-														if ($userResultCount->num_rows == 1) {
-															$count = $userResultCount->fetch_assoc();
-														?>
-															<h1 class="m-0 " id="count4"><?php echo 3 - $count["total_rows"] ?></h1>
-														<?php
-														}
-
-
-														?>
+																?>
 
 
 
 
-													</div>
-													<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 "><?php echo $currentYearMonth ?></span>
-												</div>
-											</div>
-										</div>
-										<div class="col-12 col-md-12 col-xl-4">
-											<div class="col-12">
-												<div class="card mb-4 backgroundColorChange">
-
-													<div class="card-body text-center">
-														<?php
-														$userTaskDataResult = Database::operation("SELECT * FROM `task` WHERE `task`.`user_id`='" . $user["id"] . "'", "s");
-														$userTask = "";
-														if ($userTaskDataResult->num_rows == 1) {
-															$userTaskData = $userTaskDataResult->fetch_assoc();
-															$userTask = $userTaskData["user_task"];
-														}
-
-														?>
-
-														<h5 class="mb-3 fw-bold text-light"><?php echo $user["position"] ?>'s Task</h5>
-														<p class="lh-base mb-4 text-light"><?php echo $userTask ?></p>
-
+															</div>
+															<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 "><?php echo $currentYearMonth ?></span>
+														</div>
 													</div>
 												</div>
+
+												<div class="col-12 col-md-12">
+													<div class="col-12">
+														<div class="card mb-4 backgroundColorChange">
+
+															<div class="card-body text-center">
+																<?php
+																$userTaskDataResult = Database::operation("SELECT * FROM `task` WHERE `task`.`user_id`='" . $user["id"] . "'", "s");
+																$userTask = "";
+																if ($userTaskDataResult->num_rows == 1) {
+																	$userTaskData = $userTaskDataResult->fetch_assoc();
+																	$userTask = $userTaskData["user_task"];
+																}
+
+																?>
+
+																<h5 class="mb-3 fw-bold text-light"><?php echo $user["position"] ?>'s Task</h5>
+																<p class="lh-base mb-4 text-light"><?php echo $userTask ?></p>
+
+															</div>
+														</div>
+													</div>
+												</div>
+
+
+
 											</div>
 										</div>
+
+
+
+										<div class="col-12 col-md-12 col-xl-4 text-sm-center text-lg-center text-xl-end text-md-center text-center mb-2">
+
+											<?php
+											$imagePath = "";
+											$profileImgResult = Database::operation("SELECT * FROM `id_image` WHERE `user_id`='" .  $user["id"] . "'", "s");
+											if ($profileImgResult->num_rows == 1) {
+												$image = $profileImgResult->fetch_assoc();
+												$imagePath = "resources/idImg/" . $image["name"];
+											} else {
+												$imagePath = "assets/img/card_icon.png";
+											}
+											?>
+											<img src="<?php echo $imagePath ?>" class="img-fluid  imageSize" style="height: 400px;" />
+
+
+										</div>
+
+
+
 									</div>
 								</div>
 								<!-- Row ends -->
@@ -266,7 +290,7 @@ if (isset($_SESSION["jd_user"])) {
 
 
 
-								<div class="col-xl-4 col-sm-6 col-12">
+								<div class="col-xl-4 col-sm-12 col-12">
 									<div class="card mb-4">
 										<div class="card-header">
 											<h5 class="card-title">Leave Requests</h5>
@@ -366,9 +390,9 @@ if (isset($_SESSION["jd_user"])) {
 							<?php
 							} else if ($user["user_type"] == "contributor") {
 							?>
-								<div class="col-12">
+								<div class="col-12 col-xl-8">
 									<div class="row">
-										<div class="col-12 col-lg-4">
+										<div class="col-12 col-lg-6 col-xl-6">
 											<div class="row">
 
 
@@ -409,7 +433,7 @@ if (isset($_SESSION["jd_user"])) {
 
 											</div>
 										</div>
-										<div class="col-12 col-lg-4">
+										<div class="col-12 col-lg-6 col-xl-6">
 											<div class="row">
 
 
@@ -435,7 +459,7 @@ if (isset($_SESSION["jd_user"])) {
 
 
 
-																														?></span> Articls</h1>
+																														?></span> Articles</h1>
 																<?php
 																}
 																?>
@@ -450,7 +474,74 @@ if (isset($_SESSION["jd_user"])) {
 
 											</div>
 										</div>
-										<div class="col-12 col-lg-6">
+
+
+										<div class="col-12 col-lg-12 col-xl-6">
+											<div class="row">
+
+
+												<div class="col-12">
+													<div class="card mb-4">
+														<div class="card-body d-flex align-items-center p-0">
+															<div class="p-4">
+															
+																<i class="bi bi-question-lg fs-1 lh-1 text-dark"></i>
+															</div>
+															<div class="py-4">
+																<h5 class="text-secondary fw-light m-0">Pending Submitions</h5>
+																<?php
+
+																// Set the time zone to Colombo
+																$timeZone = new DateTimeZone('Asia/Colombo');
+
+																// Get today's date in Colombo time
+																$today = new DateTime('now', $timeZone);
+
+																// Find the start of the week (Monday) in Colombo time
+																$startOfWeek = clone $today;
+																$startOfWeek->modify('this week');
+
+																// Find the end of the week (Sunday) in Colombo time
+																$endOfWeek = clone $startOfWeek;
+																$endOfWeek->modify('next Sunday');
+
+																// Access the first and last date of the week
+																$firstDate = $startOfWeek->format('Y-m-d'); // Monday
+																$lastDate = $endOfWeek->format('Y-m-d');   // Sunday
+
+														
+																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `article` WHERE `article`.`user_id`='" . $user["id"] . "' AND `article`.`date`>='".$firstDate."' AND `article`.`date`<='".$lastDate."' AND `article`.`type`='2'", "s");
+																if ($userResultCount->num_rows == 1) {
+																	$count = $userResultCount->fetch_assoc();
+
+																?>
+																	<h1 class="m-0"><span id="count2" class="number"><?php
+
+
+																														echo (3-$count["total_rows"]);
+
+
+
+																														?></span> Articles</h1>
+																<?php
+																}
+
+
+
+																?>
+
+															</div>
+
+														</div>
+													</div>
+												</div>
+
+
+
+											</div>
+										</div>
+
+										<div class="col-12 col-lg-12">
 											<div class="col-12">
 												<div class="card mb-4 backgroundColorChange">
 
@@ -474,14 +565,28 @@ if (isset($_SESSION["jd_user"])) {
 										</div>
 									</div>
 								</div>
+								<div class="col-12 col-xl-4  text-sm-center text-lg-center text-xl-end text-md-center text-center mb-2">
+
+									<?php
+									$imagePath = "";
+									$profileImgResult = Database::operation("SELECT * FROM `id_image` WHERE `user_id`='" .  $user["id"] . "'", "s");
+									if ($profileImgResult->num_rows == 1) {
+										$image = $profileImgResult->fetch_assoc();
+										$imagePath = "resources/idImg/" . $image["name"];
+									} else {
+										$imagePath = "assets/img/card_icon.png";
+									}
+									?>
+									<img src="<?php echo $imagePath ?>" class="img-fluid  imageSize" style="height: 400px;" />
+								</div>
 							<?php
 							} else {
 
 							?>
 								<div class="col-12">
 									<div class="row">
-										
-										
+
+
 										<div class="col-12 col-lg-6">
 											<div class="col-12">
 												<div class="card mb-4 backgroundColorChange">

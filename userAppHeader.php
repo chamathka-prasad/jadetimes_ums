@@ -36,7 +36,7 @@ if (isset($_SESSION["jd_user"])) {
             
             <div class="dropdown ms-3">
                 <a id="userSettings" class="dropdown-toggle d-flex py-2 align-items-center ps-3 border-start" href="#!" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="d-none d-md-block me-2"><?php echo $user["fname"] . " " . $user["lname"] ?></span>
+                
                     <img src="<?php if (empty($user["imgPath"])) {
                                 ?>assets/img/defaultProfileImage.png<?php
                                                                 } else {

@@ -63,6 +63,35 @@
 				</a>
 			</li>
 
+			<?php
+
+			if ($_SESSION["jd_admin"]["user_type"] == "admin" || $_SESSION["jd_admin"]["user_type"] == "superAdmin") {
+			?>
+				<li class="<?php if ($currentPage == "manageFeedback.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="manageFeedback.php">
+						<i class="bi bi-building"></i>
+						<span class="menu-text">Manage Feedback</span>
+					</a>
+				</li>
+
+
+				<li class="<?php if ($currentPage == "manageStaff.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="manageStaff.php">
+						<i class="bi bi-people-fill"></i>
+						<span class="menu-text">Permenent Staff</span>
+					</a>
+				</li>
+
+
+			<?php
+
+			}
+			?>
+
 			<li>
 				<hr>
 			</li>
@@ -96,24 +125,7 @@
 
 			}
 
-			if ($_SESSION["jd_admin"]["user_type"] == "admin"||$_SESSION["jd_admin"]["user_type"] == "superAdmin") {
-				?>
-					<li class="<?php if ($currentPage == "manageFeedback.php") {
-									echo "active current-page";
-								} ?>">
-						<a href="manageFeedback.php">
-							<i class="bi bi-building"></i>
-							<span class="menu-text">Manage Feedback</span>
-						</a>
-					</li>
-	
-	
-	
-					
-	
-				<?php
-	
-				}
+
 			?>
 
 			<li class="<?php if ($currentPage == "adminProfile.php") {

@@ -12,6 +12,20 @@ function changeImg() {
     }
 }
 
+function changeIdImg() {
+    var image = document.getElementById("formFile2");
+    var view = document.getElementById("view2");
+
+
+    image.onchange = function () {
+        var file = this.files[0];
+        var url = window.URL.createObjectURL(file);
+
+        view.src = url;
+
+    }
+}
+
 var baseUrl = "";
 
 
@@ -35,6 +49,7 @@ function adminUpdateUserProfile() {
     let jidField = document.getElementById("jid");
 
     let formFileField = document.getElementById("formFile");
+    let formFileField2 = document.getElementById("formFile2");
 
     let message = document.getElementById("infoMessage");
     let cbody = document.getElementById("cbody");
@@ -148,6 +163,7 @@ function adminUpdateUserProfile() {
         formData.append("linkdin", linkdin.value);
 
         formData.append("img", formFileField.files[0]);
+        formData.append("id_img", formFileField2.files[0]);
 
 
 
@@ -1149,6 +1165,30 @@ function clearSearchData() {
 
 }
 
+function clearSearchDataStaff() {
+
+    var searchtext = document.getElementById("searchname");
+    var searchemail = document.getElementById("searchemail");
+    var searchid = document.getElementById("searchid");
+    var searchposition = document.getElementById("searchposition");
+    var searchtype = document.getElementById("searchtype");
+    var searchstatus = document.getElementById("searchstatus");
+
+
+    searchtext.value = "";
+
+    searchemail.value = "";
+    searchid.value = "";
+    searchposition.value = "";
+    searchtype.value = 0;
+    searchstatus.value = 1;
+
+
+    loadStaffDateToFront(1);
+
+
+}
+
 function updateUserEmail() {
 
     var email = document.getElementById("email");
@@ -2025,7 +2065,7 @@ function loadUserFeedbackById(stat) {
                         const endDateCell = document.createElement('td');
                         endDateCell.textContent = user[6];
 
-                        
+
 
 
 
@@ -2036,7 +2076,7 @@ function loadUserFeedbackById(stat) {
 
 
                         newRow.appendChild(endDateCell);
-         
+
 
                         tablebody.appendChild(newRow);
                     }
@@ -3522,6 +3562,717 @@ function loadUserArticles(stat) {
                 var lastlabel = document.createElement('label');
                 lastlabel.className = 'btn btn-outline-info removeCorner';
                 lastlabel.htmlFor = 'lastpagi';
+                lastlabel.innerText = "Last (" + btnCount + ")";
+
+
+
+                pagicontainer.appendChild(lastpagi);
+                pagicontainer.appendChild(lastlabel);
+
+
+
+
+            } else if (value.type = "error") {
+
+                tablebody.innerHTML = value.message;
+
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+
+
+}
+
+function getDateOnly(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+
+function registerNewStaff() {
+
+
+    let adduser = document.getElementById("adduser");
+    let dor = document.getElementById("dor");
+
+
+    let message = document.getElementById("infoMessageProfileUpdate");
+    let cbody = document.getElementById("cbody");
+
+
+
+    if (adduser.value == 0) {
+        message.innerHTML = "Select a User";
+        message.classList = "alert alert-danger";
+        backToTop(cbody);
+
+    }
+    else if (dor.value == "" || getDateOnly(new Date(dor.value)) > getDateOnly(new Date())) {
+        message.innerHTML = "Invalid Registred Date";
+        message.classList = "alert alert-danger";
+        backToTop(cbody);
+
+    } else {
+
+        message.innerHTML = "";
+        message.classList = "";
+
+
+
+        var formData = new FormData();
+        formData.append("uid", adduser.value);
+        formData.append("date", dor.value);
+
+        fetch(baseUrl + "registerNewStaffProcess.php", {
+            method: "POST",
+            body: formData,
+
+        }).then(function (resp) {
+            return resp.json();
+
+        })
+            .then(function (value) {
+
+
+                if (value.type == "success") {
+                    message.innerHTML = value.message;
+                    message.classList = "alert alert-success";
+                    backToTop(cbody);
+                    setTimeout(() => {
+                        window.location = "manageStaff.php";
+                    }, 2000);
+                } else if (value.type == "error") {
+                    message.innerHTML = value.message;
+                    message.classList = "alert alert-danger";
+                    backToTop(cbody);
+                }
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }
+
+}
+
+
+function loadStaffDateToFront(stat) {
+
+
+
+    var searchtext = document.getElementById("searchname");
+    var searchemail = document.getElementById("searchemail");
+    var searchid = document.getElementById("searchid");
+    var searchposition = document.getElementById("searchposition");
+    var searchtype = document.getElementById("searchtype");
+    var searchstatus = document.getElementById("searchstatus");
+
+
+    var ele = document.getElementsByName('btnradio');
+    var dip = ""
+    for (i = 0; i < ele.length; i++) {
+        if (ele[i].checked) {
+            dip = ele[i].value;
+        }
+
+    }
+    var page = 1;
+
+    if (stat == 2) {
+        var pagi = document.getElementsByName('pagi');
+
+        for (j = 0; j < pagi.length; j++) {
+            if (pagi[j].checked) {
+                page = Number(pagi[j].value);
+            }
+
+        }
+    }
+
+
+    var formData = new FormData();
+    formData.append("searchText", searchtext.value);
+    formData.append("searchemail", searchemail.value);
+    formData.append("searchid", searchid.value);
+    formData.append("searchposition", searchposition.value);
+    formData.append("searchtype", searchtype.value);
+    formData.append("searchstatus", searchstatus.value);
+    formData.append("department", dip);
+    formData.append("page", page);
+
+
+
+
+
+
+    var tablebody = document.getElementById("tableBodyUser");
+    tablebody.innerHTML = "";
+    fetch(baseUrl + "staffLoadProcess.php", {
+        method: "POST",
+        body: formData,
+
+
+    }).then(function (resp) {
+        return resp.json();
+
+    })
+        .then(function (value) {
+
+            var pagicontainer = document.getElementById('pagicontainer');
+            pagicontainer.innerHTML = "";
+
+            if (value.type == "success") {
+                var userSearchData = value.message;
+
+                for (let index = 0; index < userSearchData.length; index++) {
+                    const user = userSearchData[index];
+
+                    const newRow = document.createElement('tr');
+                    newRow.onclick = function () {
+                        window.location = " adminUserDetails.php?userEmail=" + user[2];
+                    }
+
+
+                    const nocell = document.createElement('td');
+                    nocell.textContent = index + 1;
+                    const idCell = document.createElement('td');
+                    idCell.textContent = user[4];
+
+                    const roleCell = document.createElement('td');
+                    roleCell.textContent = user[0] + " " + user[1];
+
+                    const addressCell = document.createElement('td');
+                    addressCell.textContent = user[2];
+
+                    const ageCell = document.createElement('td');
+                    ageCell.textContent = user[3];
+
+                    const startDate = document.createElement('td');
+                    startDate.textContent = user[12];
+
+                    const startDateCell = document.createElement('td');
+                    startDateCell.textContent = user[7];
+
+                    const endDateCell = document.createElement('td');
+                    endDateCell.textContent = user[6];
+
+
+
+                    const lastUpdatedCell = document.createElement('td');
+                    lastUpdatedCell.textContent = user[10];
+
+
+
+                    const nextUpdateCell = document.createElement('td');
+                    nextUpdateCell.textContent = user[8];
+
+                    newRow.appendChild(nocell);
+                    newRow.appendChild(idCell);
+                    newRow.appendChild(roleCell);
+                    newRow.appendChild(addressCell);
+                    newRow.appendChild(ageCell);
+                    newRow.appendChild(startDate);
+                    newRow.appendChild(startDateCell);
+                    newRow.appendChild(endDateCell);
+                    newRow.appendChild(lastUpdatedCell);
+
+                    newRow.appendChild(nextUpdateCell);
+
+
+                    tablebody.appendChild(newRow);
+                }
+
+
+                var btnCount = value.buttoncount;
+
+
+                var firstpagi = document.createElement('input');
+                firstpagi.type = 'radio';
+                firstpagi.className = 'btn-check';
+                firstpagi.name = 'pagi';
+                firstpagi.id = 'firstpagi';
+
+                firstpagi.value = 1;
+                firstpagi.onchange = function () {
+                    loadStaffDateToFront(2);
+                }
+
+
+
+                var firstlabel = document.createElement('label');
+                firstlabel.className = 'btn btn-outline-info removeCorner';
+                firstlabel.htmlFor = 'firstpagi';
+                firstlabel.innerText = "First";
+
+
+
+                pagicontainer.appendChild(firstpagi);
+                pagicontainer.appendChild(firstlabel);
+
+
+
+                var startPage = 1;
+
+                var endpage = 5;
+
+
+
+                var val = page + 4;
+
+
+
+
+
+                if ((page + 4) < btnCount) {
+                    endpage = page + 4;
+                    startPage = page;
+
+                } else {
+
+                    if (btnCount >= 5) {
+                        startPage = btnCount - 4;
+
+                    } else {
+
+                        startPage = 1;
+
+                    }
+                    endpage = btnCount;
+                }
+
+
+
+                if (page != 1 && btnCount > 5) {
+                    var frontPagi = document.createElement('input');
+                    frontPagi.type = 'radio';
+                    frontPagi.className = 'btn-check';
+                    frontPagi.name = 'pagi';
+                    frontPagi.id = 'btnpagifront';
+
+                    frontPagi.value = Number(startPage) - 1;
+                    frontPagi.onchange = function () {
+                        loadStaffDateToFront(2);
+                    }
+
+                    var labelfrontpagi = document.createElement('label');
+                    labelfrontpagi.className = 'btn btn-outline-info removeCorner';
+                    labelfrontpagi.htmlFor = 'btnpagifront';
+                    labelfrontpagi.innerText = Number(startPage) - 1;
+
+
+
+                    pagicontainer.appendChild(frontPagi);
+                    pagicontainer.appendChild(labelfrontpagi);
+
+                }
+
+                for (let i = startPage - 1; i < endpage; i++) {
+
+
+
+                    var radioButton = document.createElement('input');
+                    radioButton.type = 'radio';
+                    radioButton.className = 'btn-check';
+                    radioButton.name = 'pagi';
+                    radioButton.id = 'btnpagi' + i;
+                    var pageVal = i + 1;
+                    radioButton.value = pageVal;
+                    radioButton.onchange = function () {
+                        loadStaffDateToFront(2);
+                    }
+                    if (page == pageVal) {
+                        radioButton.checked = true;
+                    }
+
+
+                    var label = document.createElement('label');
+                    label.className = 'btn btn-outline-info removeCorner';
+                    label.htmlFor = 'btnpagi' + i;
+                    label.innerText = pageVal;
+
+
+
+                    pagicontainer.appendChild(radioButton);
+                    pagicontainer.appendChild(label);
+
+                }
+
+
+                var lastpagi = document.createElement('input');
+                lastpagi.type = 'radio';
+                lastpagi.className = 'btn-check';
+                lastpagi.name = 'pagi';
+                lastpagi.id = 'lastpagi';
+
+                lastpagi.value = btnCount;
+                lastpagi.onchange = function () {
+                    loadStaffDateToFront(2);
+                }
+
+
+
+                var lastlabel = document.createElement('label');
+                lastlabel.className = 'btn btn-outline-info removeCorner';
+                lastlabel.htmlFor = 'lastpagi';
+                lastlabel.innerText = "Last (" + btnCount + ")";
+
+
+
+                pagicontainer.appendChild(lastpagi);
+                pagicontainer.appendChild(lastlabel);
+
+
+
+
+            } else if (value.type = "error") {
+
+                tablebody.innerHTML = value.message;
+
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    loadPendingPayments();
+    loadpaymentHistory(0);
+
+}
+
+
+
+
+function loadPendingPayments() {
+
+    var searchtext = document.getElementById("searchname");
+
+    var formData = new FormData();
+    formData.append("searchText", searchtext.value);
+
+    var tablebody = document.getElementById("tableBodypp");
+    tablebody.innerHTML = "";
+    fetch(baseUrl + "pendingPaymentLoadProcess.php", {
+        method: "POST",
+        body: formData,
+
+
+    }).then(function (resp) {
+        return resp.json();
+
+    })
+        .then(function (value) {
+
+            if (value.type == "success") {
+                var userSearchData = value.message;
+
+                if (userSearchData == "") {
+                    tablebody.innerHTML = "No Pending Payments";
+                    return;
+                }
+
+                for (let index = 0; index < userSearchData.length; index++) {
+                    const user = userSearchData[index];
+
+                    const newRow = document.createElement('tr');
+                    const nocell = document.createElement('td');
+                    nocell.textContent = user.fname + " " + user.lname;
+                    const idCell = document.createElement('td');
+                    idCell.textContent = user.date;
+
+                    const roleCell = document.createElement('td');
+                    roleCell.innerHTML = `<button class="btn btn-dark removeCorner backgroundColorChange" onclick="markAsPaid('${user.id}','${user.date}')">Mark As Paid</button>`;
+
+                    newRow.appendChild(nocell);
+                    newRow.appendChild(idCell);
+                    newRow.appendChild(roleCell);
+
+
+
+                    tablebody.appendChild(newRow);
+                }
+
+
+            } else if (value.type = "error") {
+
+                tablebody.innerHTML = value.message;
+
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+}
+
+
+function markAsPaid(id, date) {
+
+    let message = document.getElementById("infoMessagePaymentUpdate");
+    var formData = new FormData();
+    formData.append("id", id);
+    formData.append("date", date);
+
+    fetch(baseUrl + "staffPaymentUpdate.php", {
+        method: "POST",
+        body: formData,
+
+
+    }).then(function (resp) {
+        return resp.json();
+
+    })
+        .then(function (value) {
+
+            if (value.type == "success") {
+
+                message.innerHTML = value.message;
+                message.classList = "alert alert-success";
+                backToTop(message);
+
+                loadPendingPayments();
+                loadpaymentHistory(1);
+                setTimeout(function () {
+                    message.classList = "d-none";
+                }, 2000);
+
+
+
+            } else if (value.type = "error") {
+
+                message.innerHTML = value.message;
+                message.classList = "alert alert-danger";
+                backToTop(message);
+
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+}
+
+
+
+function loadpaymentHistory(stat) {
+
+
+
+    var searchtext = document.getElementById("searchnamePH");
+
+
+
+
+    var page = 1;
+
+    if (stat == 2) {
+        var pagi = document.getElementsByName('pagip');
+
+        for (j = 0; j < pagi.length; j++) {
+            if (pagi[j].checked) {
+                page = Number(pagi[j].value);
+            }
+
+        }
+    }
+
+
+    var formData = new FormData();
+    formData.append("searchText", searchtext.value);
+    formData.append("page", page);
+
+
+
+
+
+
+    var tablebody = document.getElementById("tableBodyphistory");
+    tablebody.innerHTML = "";
+    fetch(baseUrl + "paymentHistoryLoadProcess.php", {
+        method: "POST",
+        body: formData,
+
+
+    }).then(function (resp) {
+        return resp.json();
+
+    })
+        .then(function (value) {
+
+            var pagicontainer = document.getElementById('pagicontainerph');
+            pagicontainer.innerHTML = "";
+
+            if (value.type == "success") {
+                var userSearchData = value.message;
+
+                for (let index = 0; index < userSearchData.length; index++) {
+                    const user = userSearchData[index];
+
+                    const newRow = document.createElement('tr');
+
+                    const nocell = document.createElement('td');
+                    nocell.textContent = index + 1;
+                    const idCell = document.createElement('td');
+                    idCell.innerHTML = user[0] + " " + user[1] + "<br>" + user[2];
+
+                    let date = new Date(user[4]);
+
+                    // Set the month to the current month minus 1
+                    date.setMonth(date.getMonth() - 1);
+
+                    let reduceDate=date.toISOString().split('T')[0];
+
+                    const roleCell = document.createElement('td');
+                    roleCell.textContent =reduceDate+" to "+ user[4];
+
+                    const addressCell = document.createElement('td');
+                    addressCell.textContent = user[3];
+
+
+
+                    newRow.appendChild(nocell);
+                    newRow.appendChild(idCell);
+                    newRow.appendChild(roleCell);
+                    newRow.appendChild(addressCell);
+
+
+                    tablebody.appendChild(newRow);
+                }
+
+
+                var btnCount = value.buttoncount;
+
+
+                var firstpagi = document.createElement('input');
+                firstpagi.type = 'radio';
+                firstpagi.className = 'btn-check';
+                firstpagi.name = 'pagip';
+                firstpagi.id = 'firstpagip';
+
+                firstpagi.value = 1;
+                firstpagi.onchange = function () {
+                    loadpaymentHistory(2);
+                }
+
+
+
+                var firstlabel = document.createElement('label');
+                firstlabel.className = 'btn btn-outline-info removeCorner';
+                firstlabel.htmlFor = 'firstpagip';
+                firstlabel.innerText = "First";
+
+
+
+                pagicontainer.appendChild(firstpagi);
+                pagicontainer.appendChild(firstlabel);
+
+
+
+                var startPage = 1;
+
+                var endpage = 5;
+
+
+
+                var val = page + 4;
+
+
+
+
+
+                if ((page + 4) < btnCount) {
+                    endpage = page + 4;
+                    startPage = page;
+
+                } else {
+
+                    if (btnCount >= 5) {
+                        startPage = btnCount - 4;
+
+                    } else {
+
+                        startPage = 1;
+
+                    }
+                    endpage = btnCount;
+                }
+
+
+
+                if (page != 1 && btnCount > 5) {
+                    var frontPagi = document.createElement('input');
+                    frontPagi.type = 'radio';
+                    frontPagi.className = 'btn-check';
+                    frontPagi.name = 'pagig';
+                    frontPagi.id = 'btnpagifrontp';
+
+                    frontPagi.value = Number(startPage) - 1;
+                    frontPagi.onchange = function () {
+                        loadpaymentHistory(2);
+                    }
+
+                    var labelfrontpagi = document.createElement('label');
+                    labelfrontpagi.className = 'btn btn-outline-info removeCorner';
+                    labelfrontpagi.htmlFor = 'btnpagifrontp';
+                    labelfrontpagi.innerText = Number(startPage) - 1;
+
+
+
+                    pagicontainer.appendChild(frontPagi);
+                    pagicontainer.appendChild(labelfrontpagi);
+
+                }
+
+                for (let i = startPage - 1; i < endpage; i++) {
+
+
+
+                    var radioButton = document.createElement('input');
+                    radioButton.type = 'radio';
+                    radioButton.className = 'btn-check';
+                    radioButton.name = 'pagip';
+                    radioButton.id = 'btnpagip' + i;
+                    var pageVal = i + 1;
+                    radioButton.value = pageVal;
+                    radioButton.onchange = function () {
+                        loadpaymentHistory(2);
+                    }
+                    if (page == pageVal) {
+                        radioButton.checked = true;
+                    }
+
+
+                    var label = document.createElement('label');
+                    label.className = 'btn btn-outline-info removeCorner';
+                    label.htmlFor = 'btnpagip' + i;
+                    label.innerText = pageVal;
+
+
+
+                    pagicontainer.appendChild(radioButton);
+                    pagicontainer.appendChild(label);
+
+                }
+
+
+                var lastpagi = document.createElement('input');
+                lastpagi.type = 'radio';
+                lastpagi.className = 'btn-check';
+                lastpagi.name = 'pagip';
+                lastpagi.id = 'lastpagip';
+
+                lastpagi.value = btnCount;
+                lastpagi.onchange = function () {
+                    loadpaymentHistory(2);
+                }
+
+
+
+                var lastlabel = document.createElement('label');
+                lastlabel.className = 'btn btn-outline-info removeCorner';
+                lastlabel.htmlFor = 'lastpagip';
                 lastlabel.innerText = "Last (" + btnCount + ")";
 
 
