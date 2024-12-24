@@ -97,7 +97,7 @@ if (isset($_SESSION["jd_admin"])) {
         $message->type = "error";
         $message->message = "Select a user type";
         echo json_encode($message);
-    } else if ((empty($line1) || empty($city) || $countryId == 0)) {
+    } else if (empty($line1) || empty($city) || $countryId == 0) {
         $message->type = "error";
         $message->message = "If you are adding an address to the user     line1, city and country must be filled or selected. Also, you can register a user without adding an address by keeping the fields empty and disselecting.";
         echo json_encode($message);
@@ -189,6 +189,33 @@ if (isset($_SESSION["jd_admin"])) {
                     } else {
 
                         Database::operation("INSERT INTO `profile_image`(`name`,`user_id`)VALUES('" . $savePath . "','" . $userDetails["id"] . "')", "iud");
+                    }
+                    move_uploaded_file($img["tmp_name"], $path);
+                }
+
+
+                if (isset($_FILES["id_img"])) {
+
+
+
+                    $img = $_FILES["id_img"];
+
+
+                    $ext = pathinfo($img["name"], PATHINFO_EXTENSION);
+
+
+                    $img["type"];
+
+                    $fileName = uniqid() . $sessionAdmin["id"];
+                    $savePath = $fileName . "." . $ext;
+                    $path = "./resources/idImg/". $fileName . "." . $ext;
+
+                    $profileImgResult = Database::operation("SELECT * FROM `id_image` WHERE `user_id`='" .  $userDetails["id"] . "'", "s");
+                    if ($profileImgResult->num_rows == 1) {
+                        Database::operation("UPDATE `id_image` SET `id_image`.`name`='" . $savePath . "' WHERE `user_id`='" .  $userDetails["id"] . "'", "iud");
+                    } else {
+
+                        Database::operation("INSERT INTO `id_image`(`name`,`user_id`)VALUES('" . $savePath . "','" . $userDetails["id"] . "')", "iud");
                     }
                     move_uploaded_file($img["tmp_name"], $path);
                 }

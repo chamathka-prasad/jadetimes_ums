@@ -103,155 +103,174 @@ if (isset($_SESSION["jd_admin"])) {
 
 						<!-- Row starts -->
 						<div class="row">
-							<div class="col-xxl-3 col-sm-6 col-12">
-								<div class="card mb-4">
-									<div class="card-body d-flex align-items-center p-0">
-										<div class="p-4">
-											<i class="bi bi-pie-chart fs-1 lh-1 text-dark"></i>
-										</div>
-										<div class="py-4">
-											<h5 class="text-secondary fw-light m-0">Head Count</h5>
-											<?php
-											$headCount = 0;
-											$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `user` WHERE `user`.`user_status_id`='1'", "s");
-											if ($userResultCount->num_rows == 1) {
-												$count = $userResultCount->fetch_assoc();
-												$headCount = $count["total_rows"];
-											?>
-												<h1 class="m-0 number" id="count1"><?php echo $count["total_rows"] ?></h1>
-											<?php
-											}
-
-											$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `user` WHERE `user`.`user_status_id`='1' AND `user`.`type_id`='3'", "s");
-											if ($userResultCount->num_rows == 1) {
-												$count = $userResultCount->fetch_assoc();
-
-												$headCount = $headCount - $count["total_rows"];
-											?>
-
-											<?php
-											}
-											?>
-
-										</div>
-										<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">Active</span>
-									</div>
-								</div>
-							</div>
-							<div class="col-xxl-3 col-sm-6 col-12">
-								<div class="card mb-4">
-									<div class="card-body d-flex align-items-center p-0">
-										<div class="p-4">
-											<i class="bi bi-sticky fs-1 lh-1 text-dark"></i>
-										</div>
-										<div class="py-4">
-											<h5 class="text-secondary fw-light m-0">Pending Leaves</h5>
-
-											<?php
-											$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `leave` WHERE `leave`.`leave_status_id`='1'", "s");
-											if ($userResultCount->num_rows == 1) {
-												$count = $userResultCount->fetch_assoc();
-											?>
-												<h1 class="m-0 " id="count4"><?php echo $count["total_rows"] ?></h1>
-											<?php
-											}
-
-
-											?>
-
-
-
-
-										</div>
-										<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">leaves</span>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-xxl-3 col-sm-6 col-12">
-								<div class="card mb-4">
-									<div class="card-body d-flex align-items-center p-0">
-										<div class="p-4">
-											<i class="bi bi-star fs-1 lh-1 textredChange"></i>
-										</div>
-										<div class="py-4">
-											<h5 class="text-secondary fw-light m-0">Attendance</h5>
-											<?php
-											$d = new DateTime();
-											$tz = new DateTimeZone("Asia/Colombo");
-											$d->setTimezone($tz);
-											$today = $d->format("Y-m-d");
-											$attendanceMarkedCount = 0;
-											$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `attendance` INNER JOIN `user` ON `user`.`id`=`attendance`.`user_id` WHERE `user`.`user_status_id`='1' AND `attendance`.`date_time`LIKE '" . $today . "%'", "s");
-											if ($userResultCount->num_rows == 1) {
-
-												$count = $userResultCount->fetch_assoc();
-												$attendanceMarkedCount = $count["total_rows"];
-											?>
-												<h1 class="m-0 text-success "> <span class="number" id="count2"><?php
-																												if ($headCount != 0) {
-
-																													echo number_format(($count["total_rows"] / $headCount) * 100, 2);
-																												}
-
-
-
-																												?></span> %</h1>
-											<?php
-											}
-											?>
-										</div>
-										<span class="badge backGroundRed position-absolute top-0 end-0 m-3">Today</span>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-xxl-3 col-sm-6 col-12">
+							<div class="col-xl-8">
 								<div class="row">
-									<div class="col-6">
-										<div class="card mb-4 bg-success">
-											<div class="card-body d-flex align-items-center py-4 ">
-												<table class="w-100  text-center">
-													<tr>
-														<td class="">
-															<span class="m-0 text-white smallText">Marked</span>
-														</td>
-													</tr>
-													<tr>
-														<td class="">
-															<h2 class="m-0 text-white number" id="count5"><?php echo $attendanceMarkedCount; ?></h2>
-														</td>
-													</tr>
-												</table>
-											</div>
+									<div class="col-xxl-6 col-sm-6 col-12">
+										<div class="card mb-4">
+											<div class="card-body d-flex align-items-center p-0">
+												<div class="p-4">
+													<i class="bi bi-pie-chart fs-1 lh-1 text-dark"></i>
+												</div>
+												<div class="py-4">
+													<h5 class="text-secondary fw-light m-0">Head Count</h5>
+													<?php
+													$headCount = 0;
+													$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `user` WHERE `user`.`user_status_id`='1'", "s");
+													if ($userResultCount->num_rows == 1) {
+														$count = $userResultCount->fetch_assoc();
+														$headCount = $count["total_rows"];
+													?>
+														<h1 class="m-0 number" id="count1"><?php echo $count["total_rows"] ?></h1>
+													<?php
+													}
 
+													$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `user` WHERE `user`.`user_status_id`='1' AND `user`.`type_id`='3'", "s");
+													if ($userResultCount->num_rows == 1) {
+														$count = $userResultCount->fetch_assoc();
+
+														$headCount = $headCount - $count["total_rows"];
+													?>
+
+													<?php
+													}
+													?>
+
+												</div>
+												<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">Active</span>
+											</div>
 										</div>
-
 									</div>
-									<div class="col-6">
-										<div class="card mb-4 backGroundRed">
-											<div class="card-body d-flex align-items-center py-4 ">
-												<table class="w-100  text-center">
+									<div class="col-xxl-6 col-sm-6 col-12">
+										<div class="card mb-4">
+											<div class="card-body d-flex align-items-center p-0">
+												<div class="p-4">
+													<i class="bi bi-sticky fs-1 lh-1 text-dark"></i>
+												</div>
+												<div class="py-4">
+													<h5 class="text-secondary fw-light m-0">Pending Leaves</h5>
 
-													<tr>
-														<td class="">
-															<span class="m-0 text-white smallText">Not Marked</span>
-														</td>
-													</tr>
-													<tr>
-														<td class="">
-															<h2 class="m-0 text-black number" id="count6"><?php echo $headCount - $attendanceMarkedCount ?></h2>
-														</td>
-													</tr>
+													<?php
+													$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `leave` WHERE `leave`.`leave_status_id`='1'", "s");
+													if ($userResultCount->num_rows == 1) {
+														$count = $userResultCount->fetch_assoc();
+													?>
+														<h1 class="m-0 " id="count4"><?php echo $count["total_rows"] ?></h1>
+													<?php
+													}
 
 
-												</table>
+													?>
+
+
+
+
+												</div>
+												<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">leaves</span>
 											</div>
+										</div>
+									</div>
 
+									<div class="col-xxl-6 col-sm-6 col-12">
+										<div class="card mb-4">
+											<div class="card-body d-flex align-items-center p-0">
+												<div class="p-4">
+													<i class="bi bi-star fs-1 lh-1 textredChange"></i>
+												</div>
+												<div class="py-4">
+													<h5 class="text-secondary fw-light m-0">Attendance</h5>
+													<?php
+													$d = new DateTime();
+													$tz = new DateTimeZone("Asia/Colombo");
+													$d->setTimezone($tz);
+													$today = $d->format("Y-m-d");
+													$attendanceMarkedCount = 0;
+													$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `attendance` INNER JOIN `user` ON `user`.`id`=`attendance`.`user_id` WHERE `user`.`user_status_id`='1' AND `attendance`.`date_time`LIKE '" . $today . "%'", "s");
+													if ($userResultCount->num_rows == 1) {
+
+														$count = $userResultCount->fetch_assoc();
+														$attendanceMarkedCount = $count["total_rows"];
+													?>
+														<h1 class="m-0 text-success "> <span class="number" id="count2"><?php
+																														if ($headCount != 0) {
+
+																															echo number_format(($count["total_rows"] / $headCount) * 100, 2);
+																														}
+
+
+
+																														?></span> %</h1>
+													<?php
+													}
+													?>
+												</div>
+												<span class="badge backGroundRed position-absolute top-0 end-0 m-3">Today</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-xxl-6 col-sm-6 col-12">
+										<div class="row">
+											<div class="col-6">
+												<div class="card mb-4 bg-success">
+													<div class="card-body d-flex align-items-center py-4 ">
+														<table class="w-100  text-center">
+															<tr>
+																<td class="">
+																	<span class="m-0 text-white smallText">Marked</span>
+																</td>
+															</tr>
+															<tr>
+																<td class="">
+																	<h2 class="m-0 text-white number" id="count5"><?php echo $attendanceMarkedCount; ?></h2>
+																</td>
+															</tr>
+														</table>
+													</div>
+
+												</div>
+
+											</div>
+											<div class="col-6">
+												<div class="card mb-4 backGroundRed">
+													<div class="card-body d-flex align-items-center py-4 ">
+														<table class="w-100  text-center">
+
+															<tr>
+																<td class="">
+																	<span class="m-0 text-white smallText">Not Marked</span>
+																</td>
+															</tr>
+															<tr>
+																<td class="">
+																	<h2 class="m-0 text-black number" id="count6"><?php echo $headCount - $attendanceMarkedCount ?></h2>
+																</td>
+															</tr>
+
+
+														</table>
+													</div>
+
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
+							<div class="col-12 col-xl-4  text-sm-center text-lg-center text-xl-end text-md-center text-center">
+
+								<?php
+								$imagePath = "";
+								$profileImgResult = Database::operation("SELECT * FROM `id_image` WHERE `user_id`='" .  $admin["id"] . "'", "s");
+								if ($profileImgResult->num_rows == 1) {
+									$image = $profileImgResult->fetch_assoc();
+									$imagePath = "resources/idImg/" . $image["name"];
+								} else {
+									$imagePath = "assets/img/card_icon.png";
+								}
+								?>
+								<img src="<?php echo $imagePath ?>" class="img-fluid  imageSize" style="height: 400px;" />
+							</div>
+
 						</div>
 
 
@@ -745,9 +764,11 @@ if (isset($_SESSION["jd_admin"])) {
 		<?php
 
 		if ($admin["user_type"] == "admin") {
-			?>
-			<script>userFeedBackRequest();</script>
-			<?php
+		?>
+			<script>
+				userFeedBackRequest();
+			</script>
+		<?php
 		}
 		?> <script>
 			document.addEventListener("DOMContentLoaded", function() {

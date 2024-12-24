@@ -398,6 +398,7 @@ if (isset($_SESSION["jd_admin"])) {
 		<!-- Custom JS files -->
 		<script src="assets/js/custom.js"></script>
 		<script src="assets/js/admin.js"></script>
+
 	</body>
 
 	</html>
