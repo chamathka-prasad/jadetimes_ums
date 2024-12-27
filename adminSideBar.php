@@ -54,6 +54,43 @@
 					<span class="menu-text">Manage Leaves</span>
 				</a>
 			</li>
+			<li class="<?php if ($currentPage == "manageReports.php") {
+							echo "active current-page";
+						} ?>">
+				<a href="manageReports.php">
+					<i class="bi bi-flag"></i>
+					<span class="menu-text">
+						Manage Reports
+
+						<?php
+						$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `report` WHERE `status`='0'", "s");
+
+						if ($userResultCount->num_rows != 0) {
+
+							$number = $userResultCount->fetch_assoc();
+							$rowCount = $number["total_rows"];
+
+
+						?>
+							<?php
+							if ($rowCount != 0) {
+							?><span class="badge text-bg-secondary">
+									<?php echo $rowCount ?></span>
+						<?php
+							}
+						}
+						?>
+					</span>
+				</a>
+			</li>
+			<li class="<?php if ($currentPage =="manageStaff.php") {
+							echo "active current-page";
+						} ?>">
+				<a href="manageStaff.php">
+					<i class="bi bi-bar-chart-steps"></i>
+					<span class="menu-text">Permenent Staff</span>
+				</a>
+			</li>
 			<li class="<?php if ($currentPage == "managePositions.php") {
 							echo "active current-page";
 						} ?>">
@@ -96,24 +133,24 @@
 
 			}
 
-			if ($_SESSION["jd_admin"]["user_type"] == "admin"||$_SESSION["jd_admin"]["user_type"] == "superAdmin") {
-				?>
-					<li class="<?php if ($currentPage == "manageFeedback.php") {
-									echo "active current-page";
-								} ?>">
-						<a href="manageFeedback.php">
-							<i class="bi bi-building"></i>
-							<span class="menu-text">Manage Feedback</span>
-						</a>
-					</li>
-	
-	
-	
-					
-	
-				<?php
-	
-				}
+			if ($_SESSION["jd_admin"]["user_type"] == "admin" || $_SESSION["jd_admin"]["user_type"] == "superAdmin") {
+			?>
+				<li class="<?php if ($currentPage == "manageFeedback.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="manageFeedback.php">
+						<i class="bi bi-building"></i>
+						<span class="menu-text">Manage Feedback</span>
+					</a>
+				</li>
+
+
+
+
+
+			<?php
+
+			}
 			?>
 
 			<li class="<?php if ($currentPage == "adminProfile.php") {

@@ -607,6 +607,37 @@ if (isset($_SESSION["jd_admin"])) {
 																			</select>
 																		</div>
 																	</div>
+																	<div class="col-12">
+																		<hr>
+																		<label class="form-label mt-2 fs-6">Jadetimes Id Card</label>
+																	</div>
+
+
+																	<div class="col-12">
+																		<div class="card mb-4">
+																			<div class="card-body">
+																				<div class="row">
+																					<div class="col-sm-12 text-start">
+
+																						<?php
+																						$imagePath = "";
+																						$profileImgResult = Database::operation("SELECT * FROM `id_image` WHERE `user_id`='" .  $Profile["id"] . "'", "s");
+																						if ($profileImgResult->num_rows == 1) {
+																							$image = $profileImgResult->fetch_assoc();
+																							$imagePath = "resources/idImg/" . $image["name"];
+																						} else {
+																							$imagePath = "assets/img/card_icon.png";
+																						}
+																						?>
+																						<img src="<?php echo $imagePath ?>" class="img-fluid  imageSize" id="view2" alt="" />
+																						<label for="formFile2" class="btn btn-dark removeCorner " onclick="changeIdImg()">+</label>
+																						<input type="file" id="formFile2" class="d-none"/>
+																					</div>
+
+																				</div>
+																			</div>
+																		</div>
+																	</div>
 
 
 																	</div>

@@ -35,9 +35,16 @@
 						<span class="menu-text">My Article</span>
 					</a>
 				</li>
+				<li class="<?php if ($currentPage == "reports.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="reports.php">
+						<i class="bi bi-flag"></i>
+						<span class="menu-text">Report</span>
+					</a>
+				</li>
 			<?php
 			} else if ($_SESSION["jd_user"]["user_type"] == "director") {
-
 			} else {
 			?>
 				<li class="<?php if ($currentPage == "userAttendence.php") {
@@ -75,7 +82,7 @@
 
 			<?php
 
-			if ($_SESSION["jd_user"]["user_type"] == "head"||$_SESSION["jd_user"]["user_type"] == "director") {
+			if ($_SESSION["jd_user"]["user_type"] == "head" || $_SESSION["jd_user"]["user_type"] == "director") {
 			?>
 				<li class="">
 					<hr>
