@@ -1,9 +1,9 @@
 <?php
-session_start();
-require "connection.php";
-if (isset($_SESSION["jd_user"])) {
+// session_start();
+// require "connection.php";
+// if (isset($_SESSION["jd_user"])) {
 
-	$userSession = $_SESSION["jd_user"];
+// 	$userSession = $_SESSION["jd_user"];
 ?>
 	<!DOCTYPE html>
 	<html lang="en">
@@ -134,28 +134,28 @@ if (isset($_SESSION["jd_user"])) {
 
 																	$today = $d->format("Y-m-d");
 
-																	$results = Database::operation("SELECT * FROM `attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $today . "%' ", "s");
-																	$leaveAvailable = false;
-																	if ($results->num_rows == 1) {
+																	// $results = Database::operation("SELECT * FROM `attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $today . "%' ", "s");
+																	// $leaveAvailable = false;
+																	// if ($results->num_rows == 1) {
 																	?>
 																		<div class="col-12 alert alert-success " id="infoMessage" role="alert">
 																			Attendance Already Marked
 																		</div>
 
 																		<?php
-																	} else {
+																	// } else {
 
-																		$resultsLeave = Database::operation("SELECT * FROM `leave` WHERE `user_id`='" . $userSession["id"] . "' AND `leave_date`='" . $today . "' AND `leave_status_id` IN('2','4')", "s");
-																		if ($resultsLeave->num_rows == 1) {
-																			$leaveAvailable = true;
+																	// 	$resultsLeave = Database::operation("SELECT * FROM `leave` WHERE `user_id`='" . $userSession["id"] . "' AND `leave_date`='" . $today . "' AND `leave_status_id` IN('2','4')", "s");
+																	// 	if ($resultsLeave->num_rows == 1) {
+																	// 		$leaveAvailable = true;
 																		?>
 																			<div class="col-12 alert alert-danger " id="infoMessage" role="alert">
 																				You are on a leave you cannot mark Attendance
 																			</div>
 
 																	<?php
-																		}
-																	}
+																	// 	}
+																	// }
 
 
 																	?>
@@ -174,10 +174,18 @@ if (isset($_SESSION["jd_user"])) {
 																		</div>
 
 
-																		<div class="col-sm-6 col-12">
+																		<div class="col-sm-6 col-12" hidden>
 																			<div class="mb-3">
 																				<label class="form-label">Tasks have Completed <small>(max characters: 1000)</small></label>
-																				<textarea class="form-control removeCorner" id="task" placeholder="Tasks have Completed" rows="10"></textarea>
+																				<textarea class="form-control removeCorner" id="task" placeholder="Article" rows="10"></textarea>
+																			</div>
+																		</div>
+																		<div class="col-sm-6 col-12">
+																			<div class="mb-3">
+																				<label class="form-label">Articles Completed</label>
+																				<textarea class="form-control removeCorner" id="task-1" placeholder="Article 1" rows="1"></textarea>
+																				<textarea class="form-control removeCorner my-1" id="task-2" placeholder="Article 2" rows="1"></textarea>
+																				<textarea class="form-control removeCorner" id="task-3" placeholder="Article 3" rows="1"></textarea>
 																			</div>
 																		</div>
 																	</div>
@@ -273,11 +281,11 @@ if (isset($_SESSION["jd_user"])) {
 	</html>
 <?php
 
-} else {
+// } else {
 ?>
-	<script>
+	<!-- <script>
 		window.location = "userLogin.php";
-	</script>
+	</script> -->
 <?php
-}
+// }
 ?>
