@@ -29,6 +29,15 @@ if (isset($_SESSION["jd_user"])) {
 
     $userDate = $_POST["date"];
     $task = $_POST["task"];
+
+
+    $arti1 = $_POST["arti1"];
+    $arti2 = $_POST["arti2"];
+    $arti3 = $_POST["arti3"];
+
+
+
+
     $d = new DateTime();
     $tz = new DateTimeZone("Asia/Colombo");
     $d->setTimezone($tz);
@@ -50,22 +59,53 @@ if (isset($_SESSION["jd_user"])) {
         echo json_encode($message);
     } else {
 
-        $results = Database::operation("SELECT * FROM `attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $userDate . "%' ", "s");
 
-        if ($results->num_rows == 1) {
-            $userDetails = $results->fetch_assoc();
+        $taskMarkStat = false;
 
-            $message->type = "error";
-            $message->message = "Already marked for today";
-            echo json_encode($message);
+        if ($userSession["position"] == "Article Writer") {
+
+            if (empty($arti1)) {
+                $message->type = "error";
+                $message->message = "Article 1 is Empty";
+                echo json_encode($message);
+                return;
+            } else if (empty($arti2)) {
+                $message->type = "error";
+                $message->message = "Article 2 is Empty";
+                echo json_encode($message);
+                return;
+            } else if (empty($arti3)) {
+                $message->type = "error";
+                $message->message = "Article 3 is Empty";
+                echo json_encode($message);
+                return;
+            }else{
+                Database::operation("INSERT INTO `article`(`title`,`date`,`submit_date`,`user_id`,`type`)VALUES('" . $arti1 . "','" . $today . "','" . $date . "','" . $userSession["id"] . "','2')", "iud");
+                Database::operation("INSERT INTO `article`(`title`,`date`,`submit_date`,`user_id`,`type`)VALUES('" . $arti2 . "','" . $today . "','" . $date . "','" . $userSession["id"] . "','2')", "iud");
+                Database::operation("INSERT INTO `article`(`title`,`date`,`submit_date`,`user_id`,`type`)VALUES('" . $arti3 . "','" . $today . "','" . $date . "','" . $userSession["id"] . "','2')", "iud");
+                $taskMarkStat = true;
+            }
         } else {
+            $taskMarkStat = true;
+        }
+        if ($taskMarkStat) {
+            $results = Database::operation("SELECT * FROM `attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $userDate . "%' ", "s");
 
-            Database::operation("INSERT INTO `attendance`(`user_id`,`date_time`,`description`)VALUES('" . $userSession["id"] . "','" . $date . "','" . $task . "')", "iud");
+            if ($results->num_rows == 1) {
+                $userDetails = $results->fetch_assoc();
+
+                $message->type = "error";
+                $message->message = "Already marked for today";
+                echo json_encode($message);
+            } else {
+
+                Database::operation("INSERT INTO `attendance`(`user_id`,`date_time`,`description`)VALUES('" . $userSession["id"] . "','" . $date . "','" . $task . "')", "iud");
 
 
-            $message->type = "success";
-            $message->message = "Attendance marked success";
-            echo json_encode($message);
+                $message->type = "success";
+                $message->message = "Attendance marked success";
+                echo json_encode($message);
+            }
         }
     }
 }

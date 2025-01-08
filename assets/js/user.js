@@ -1,85 +1,85 @@
 var baseUrl = "";
 
-function markAttendence() {
+// function markAttendence() {
 
-    var msg = document.getElementById("infoMessage");
-    var date = document.getElementById("date");
-    var task = document.getElementById("task");
-
-
+//     var msg = document.getElementById("infoMessage");
+//     var date = document.getElementById("date");
+//     var task = document.getElementById("task");
 
 
-    if (date.value.length == 0) {
-
-        msg.innerHTML = "Date is Empty";
-        msg.classList = "alert alert-danger";
-        backToTop(cbody);
-    } else if (task.value.length == 0) {
-
-        msg.innerHTML = "Cannot submit empty task";
-        msg.classList = "alert alert-danger";
-        backToTop(cbody);
-    } else if (task.value.length > 1000) {
-
-        msg.innerHTML = "Task is too lengthy max characters 1000";
-        msg.classList = "alert alert-danger";
-        backToTop(cbody);
-    } else {
-
-        var formData = new FormData();
-
-        formData.append("date", date.value);
-
-        formData.append("task", task.value);
 
 
-        fetch(baseUrl + "attendanceMarkProcess.php", {
-            method: "POST",
-            body: formData,
+//     if (date.value.length == 0) {
 
-        })
-            .then(function (resp) {
+//         msg.innerHTML = "Date is Empty";
+//         msg.classList = "alert alert-danger";
+//         backToTop(cbody);
+//     } else if (task.value.length == 0) {
 
-                try {
-                    let response = resp.json();
-                    return response;
-                } catch (error) {
-                    msg.classList = "alert alert-danger";
-                    msg.innerHTML = "Something wrong please try again";
-                    emailField.classList = "form-control";
-                    passwordField.classList = "form-control";
-                }
+//         msg.innerHTML = "Cannot submit empty task";
+//         msg.classList = "alert alert-danger";
+//         backToTop(cbody);
+//     } else if (task.value.length > 1000) {
 
-            })
-            .then(function (value) {
+//         msg.innerHTML = "Task is too lengthy max characters 1000";
+//         msg.classList = "alert alert-danger";
+//         backToTop(cbody);
+//     } else {
 
-                if (value.type == "error") {
-                    msg.classList = "alert alert-danger";
-                    msg.innerHTML = value.message;
+//         var formData = new FormData();
 
-                } else if (value.type == "success") {
-                    msg.classList = "alert alert-success";
-                    msg.innerHTML = value.message;
+//         formData.append("date", date.value);
 
-                    setTimeout(() => {
-                        window.location = "userAttendence.php";
-                    }, 1000);
-                } else {
-                    msg.classList = "alert alert-danger";
-                    msg.innerHTML = "Something wrong please try again";
-                    emailField.classList = "form-control";
-                    passwordField.classList = "form-control";
-                }
-
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+//         formData.append("task", task.value);
 
 
-    }
+//         fetch(baseUrl + "attendanceMarkProcess.php", {
+//             method: "POST",
+//             body: formData,
 
-}
+//         })
+//             .then(function (resp) {
+
+//                 try {
+//                     let response = resp.json();
+//                     return response;
+//                 } catch (error) {
+//                     msg.classList = "alert alert-danger";
+//                     msg.innerHTML = "Something wrong please try again";
+//                     emailField.classList = "form-control";
+//                     passwordField.classList = "form-control";
+//                 }
+
+//             })
+//             .then(function (value) {
+
+//                 if (value.type == "error") {
+//                     msg.classList = "alert alert-danger";
+//                     msg.innerHTML = value.message;
+
+//                 } else if (value.type == "success") {
+//                     msg.classList = "alert alert-success";
+//                     msg.innerHTML = value.message;
+
+//                     setTimeout(() => {
+//                         window.location = "userAttendence.php";
+//                     }, 1000);
+//                 } else {
+//                     msg.classList = "alert alert-danger";
+//                     msg.innerHTML = "Something wrong please try again";
+//                     emailField.classList = "form-control";
+//                     passwordField.classList = "form-control";
+//                 }
+
+//             })
+//             .catch(function (error) {
+//                 console.log(error);
+//             });
+
+
+//     }
+
+// }
 function loadUserLeaves(stat) {
 
 

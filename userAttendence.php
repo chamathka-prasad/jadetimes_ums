@@ -1,9 +1,9 @@
 <?php
-// session_start();
-// require "connection.php";
-// if (isset($_SESSION["jd_user"])) {
+session_start();
+require "connection.php";
+if (isset($_SESSION["jd_user"])) {
 
-// 	$userSession = $_SESSION["jd_user"];
+	$userSession = $_SESSION["jd_user"];
 ?>
 	<!DOCTYPE html>
 	<html lang="en">
@@ -134,28 +134,28 @@
 
 																	$today = $d->format("Y-m-d");
 
-																	// $results = Database::operation("SELECT * FROM `attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $today . "%' ", "s");
-																	// $leaveAvailable = false;
-																	// if ($results->num_rows == 1) {
+																	$results = Database::operation("SELECT * FROM `attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $today . "%' ", "s");
+																	$leaveAvailable = false;
+																	if ($results->num_rows == 1) {
 																	?>
 																		<div class="col-12 alert alert-success " id="infoMessage" role="alert">
 																			Attendance Already Marked
 																		</div>
 
 																		<?php
-																	// } else {
+																	} else {
 
-																	// 	$resultsLeave = Database::operation("SELECT * FROM `leave` WHERE `user_id`='" . $userSession["id"] . "' AND `leave_date`='" . $today . "' AND `leave_status_id` IN('2','4')", "s");
-																	// 	if ($resultsLeave->num_rows == 1) {
-																	// 		$leaveAvailable = true;
+																		$resultsLeave = Database::operation("SELECT * FROM `leave` WHERE `user_id`='" . $userSession["id"] . "' AND `leave_date`='" . $today . "' AND `leave_status_id` IN('2','4')", "s");
+																		if ($resultsLeave->num_rows == 1) {
+																			$leaveAvailable = true;
 																		?>
 																			<div class="col-12 alert alert-danger " id="infoMessage" role="alert">
 																				You are on a leave you cannot mark Attendance
 																			</div>
 
 																	<?php
-																	// 	}
-																	// }
+																		}
+																	}
 
 
 																	?>
@@ -173,21 +173,31 @@
 																			</div>
 																		</div>
 
+																		<?php
+																		if ($userSession["position"] == "Article Writer") {
+																		?>
 
-																		<div class="col-sm-6 col-12" hidden>
-																			<div class="mb-3">
-																				<label class="form-label">Tasks have Completed <small>(max characters: 1000)</small></label>
-																				<textarea class="form-control removeCorner" id="task" placeholder="Article" rows="10"></textarea>
+																			<div class="col-12">
+																				<div class="mb-3">
+																					<label class="form-label">Articles Completed</label>
+																					<textarea class="form-control removeCorner" id="arti-1" placeholder="Article 1" rows="1"></textarea>
+																					<textarea class="form-control removeCorner my-1" id="arti-2" placeholder="Article 2" rows="1"></textarea>
+																					<textarea class="form-control removeCorner" id="arti-3" placeholder="Article 3" rows="1"></textarea>
+																				</div>
 																			</div>
-																		</div>
+																		<?php
+
+
+																		}
+
+																		?>
 																		<div class="col-sm-6 col-12">
 																			<div class="mb-3">
-																				<label class="form-label">Articles Completed</label>
-																				<textarea class="form-control removeCorner" id="task-1" placeholder="Article 1" rows="1"></textarea>
-																				<textarea class="form-control removeCorner my-1" id="task-2" placeholder="Article 2" rows="1"></textarea>
-																				<textarea class="form-control removeCorner" id="task-3" placeholder="Article 3" rows="1"></textarea>
+																				<label class="form-label">Tasks have Completed <small>(max characters: 1000)</small></label>
+																				<textarea class="form-control removeCorner" id="task" placeholder="Task" rows="10"></textarea>
 																			</div>
 																		</div>
+
 																	</div>
 																	<!-- Row end -->
 																</div>
@@ -267,25 +277,117 @@
 
 		<!-- Custom JS files -->
 		<script src="assets/js/custom.js"></script>
+
+		<script>
+			document.getElementById('task').addEventListener('paste', function(event) {
+				event.preventDefault();
+				let paste = (event.clipboardData || window.clipboardData).getData('text');
+				paste = paste.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); // Remove control characters
+				document.getElementById('task').value = paste.trim(); // Clean and trim the pasted input
+			});
+
+			var baseUrl = "";
+
+			function markAttendence() {
+
+				var msg = document.getElementById("infoMessage");
+				var date = document.getElementById("date");
+				var task = document.getElementById("task");
+
+				var arti1 = document.getElementById("arti-1");
+				var arti2 = document.getElementById("arti-2");
+				var arti3 = document.getElementById("arti-3");
+
+
+
+				if (date.value.length == 0) {
+
+					msg.innerHTML = "Date is Empty";
+					msg.classList = "alert alert-danger";
+					backToTop(cbody);
+				} else if (task.value.length == 0) {
+
+					msg.innerHTML = "Cannot submit empty task";
+					msg.classList = "alert alert-danger";
+					backToTop(cbody);
+				} else if (task.value.length > 1000) {
+
+					msg.innerHTML = "Task is too lengthy max characters 1000";
+					msg.classList = "alert alert-danger";
+					backToTop(cbody);
+				} else {
+
+					var formData = new FormData();
+
+					formData.append("date", date.value);
+
+					formData.append("task", task.value);
+
+					formData.append("arti1", arti1.value);
+					formData.append("arti2", arti2.value);
+					formData.append("arti3", arti3.value);
+
+
+					fetch(baseUrl + "attendanceMarkProcess.php", {
+							method: "POST",
+							body: formData,
+
+						})
+						.then(function(resp) {
+
+							try {
+								let response = resp.json();
+								return response;
+							} catch (error) {
+								msg.classList = "alert alert-danger";
+								msg.innerHTML = "Something wrong please try again";
+								emailField.classList = "form-control";
+								passwordField.classList = "form-control";
+							}
+
+						})
+						.then(function(value) {
+
+							if (value.type == "error") {
+								msg.classList = "alert alert-danger";
+								msg.innerHTML = value.message;
+
+							} else if (value.type == "success") {
+								msg.classList = "alert alert-success";
+								msg.innerHTML = value.message;
+
+								setTimeout(() => {
+									window.location = "userAttendence.php";
+								}, 1000);
+							} else {
+								msg.classList = "alert alert-danger";
+								msg.innerHTML = "Something wrong please try again";
+								emailField.classList = "form-control";
+								passwordField.classList = "form-control";
+							}
+
+						})
+						.catch(function(error) {
+							console.log(error);
+						});
+
+
+				}
+
+			}
+		</script>
 		<script src="assets/js/user.js"></script>
 	</body>
-	<script>
-		document.getElementById('task').addEventListener('paste', function(event) {
-			event.preventDefault();
-			let paste = (event.clipboardData || window.clipboardData).getData('text');
-			paste = paste.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); // Remove control characters
-			document.getElementById('task').value = paste.trim(); // Clean and trim the pasted input
-		});
-	</script>
+
 
 	</html>
 <?php
 
-// } else {
+} else {
 ?>
-	<!-- <script>
+	<script>
 		window.location = "userLogin.php";
-	</script> -->
+	</script>
 <?php
-// }
+}
 ?>

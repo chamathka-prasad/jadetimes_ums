@@ -78,7 +78,7 @@ if (isset($_SESSION["jd_admin"])) {
 								<i class="bi bi-house text-dark"></i>
 								<a href="adminPanel.php">Home</a>
 							</li>
-							<li class="breadcrumb-item" aria-current="page">Manage Leaves</li>
+							<li class="breadcrumb-item" aria-current="page">Manage Articles</li>
 						</ol>
 						<!-- Breadcrumb end -->
 
@@ -199,7 +199,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 
 
-												$userResultAttendance = Database::operation("SELECT * FROM `user` WHERE `type_id`='5'", "s");
+												$userResultAttendance = Database::operation("SELECT * FROM `user` WHERE `type_id` IN ('5','1')", "s");
 												$userResultAttendanceNumbers = $userResultAttendance->num_rows;
 												if ($userResultAttendanceNumbers != 0) {
 													for ($typ = 0; $typ < $userResultAttendanceNumbers; $typ++) {
@@ -305,7 +305,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 									<div class="row">
 										<div class="col-12 text-lg-start text-end">
-											<button class="btn btn-danger removeCorner" onclick="clearSearchDataLeave()"><i class="bi bi-x"></i></button>
+											<button class="btn btn-danger removeCorner" onclick="window.location='manageArticles.php'"><i class="bi bi-x"></i></button>
 										</div>
 									</div>
 
