@@ -135,11 +135,20 @@ if (isset($_SESSION["jd_user"])) {
 																	$today = $d->format("Y-m-d");
 
 																	$results = Database::operation("SELECT * FROM `attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $today . "%' ", "s");
+
+																	$resultsPendingAttendance = Database::operation("SELECT * FROM `pending_attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $today . "%' AND status='1' ", "s");
 																	$leaveAvailable = false;
 																	if ($results->num_rows == 1) {
 																	?>
 																		<div class="col-12 alert alert-success " id="infoMessage" role="alert">
 																			Attendance Already Marked
+																		</div>
+
+																	<?php
+																	} else if ($resultsPendingAttendance->num_rows == 1) {
+																	?>
+																		<div class="col-12 alert alert-info " id="infoMessage" role="alert">
+																			Attendance Is Pending. Please Wait , Article Head Will Approve it.
 																		</div>
 
 																		<?php
@@ -173,24 +182,23 @@ if (isset($_SESSION["jd_user"])) {
 																			</div>
 																		</div>
 
-																		<?php
-																		if ($userSession["position"] == "Article Writer") {
-																		?>
 
-																			<div class="col-12">
-																				<div class="mb-3">
-																					<label class="form-label">Articles Completed</label>
-																					<textarea class="form-control removeCorner" id="arti-1" placeholder="Article 1" rows="1"></textarea>
-																					<textarea class="form-control removeCorner my-1" id="arti-2" placeholder="Article 2" rows="1"></textarea>
-																					<textarea class="form-control removeCorner" id="arti-3" placeholder="Article 3" rows="1"></textarea>
-																				</div>
+
+																		<div class="col-12 	<?php
+																								if ($userSession["position"] != "Article Writer") {
+																								?>												<?php
+																																					echo "d-none";
+																																				}
+
+																																					?>">
+																			<div class="mb-3">
+																				<label class="form-label">Articles Completed</label>
+																				<textarea class="form-control removeCorner" id="arti-1" placeholder="Article 1" rows="1"></textarea>
+																				<textarea class="form-control removeCorner my-1" id="arti-2" placeholder="Article 2" rows="1"></textarea>
+																				<textarea class="form-control removeCorner" id="arti-3" placeholder="Article 3" rows="1"></textarea>
 																			</div>
-																		<?php
+																		</div>
 
-
-																		}
-
-																		?>
 																		<div class="col-sm-6 col-12">
 																			<div class="mb-3">
 																				<label class="form-label">Tasks have Completed <small>(max characters: 1000)</small></label>
@@ -204,7 +212,7 @@ if (isset($_SESSION["jd_user"])) {
 																<div class="card-footer">
 																	<div class="d-flex gap-2 justify-content-center">
 																		<button type="button" class="btn btn-dark backgroundColorChange removeCorner" <?php
-																																						if ($results->num_rows == 1) {
+																																						if ($results->num_rows == 1||$resultsPendingAttendance->num_rows == 1) {
 																																						?> disabled <?php
 																																								} else if ($leaveAvailable) {
 																																									?>
@@ -287,6 +295,143 @@ if (isset($_SESSION["jd_user"])) {
 			});
 
 			var baseUrl = "";
+
+
+			function loadUserAttendance() {
+
+
+				fetch(baseUrl + "fetchAttendanceProcess.php", {
+						method: "POST",
+						headers: {
+
+							"Content-Type": "application/json;charset=UTF-8"
+						},
+
+					})
+					.then(function(resp) {
+
+						try {
+							let response = resp.json();
+							return response;
+						} catch (error) {
+							msg.classList = "alert alert-danger";
+							msg.innerHTML = "Something wrong please try again";
+							emailField.classList = "form-control";
+							passwordField.classList = "form-control";
+						}
+
+					})
+					.then(function(value) {
+
+						if (value.type == "info") {
+
+
+							var attendanceArray = value.message;
+
+							var eventArray = new Array();
+
+							for (let index = 0; index < attendanceArray.length; index++) {
+								const element = attendanceArray[index];
+								var fetchDate = element[2];
+								var component = {
+									title: "Marked",
+									start: fetchDate.split(" ")[0],
+									color: "#90EE90",
+									constraint: 'availableForMeeting',
+
+								};
+								eventArray.push(component);
+							}
+
+							for (let index = 0; index < value.pending.length; index++) {
+								const element = value.pending[index];
+								var fetchDate = element[0];
+								var component = {
+									title: "Pending",
+									start: fetchDate.split(" ")[0],
+									color: "#fee801",
+									constraint: 'availableForMeeting',
+
+								};
+								eventArray.push(component);
+							}
+
+							for (let index = 0; index < value.leave.length; index++) {
+								const element = value.leave[index];
+								var fetchDate = element[0];
+								if (element[1] == 2) {
+
+									let component = {
+										title: "Normal Leave",
+										start: fetchDate,
+										color: "#ff0d0d",
+										constraint: 'availableForMeeting',
+
+									};
+									eventArray.push(component);
+								} else if (element[1] == 4) {
+
+									let component = {
+										title: "Emergancy Leave",
+										start: fetchDate,
+										color: "#ffcc00",
+										constraint: 'availableForMeeting',
+
+									};
+									eventArray.push(component);
+								} else {
+
+									let component = {
+										title: "Special Leave",
+										start: fetchDate,
+										color: "#cc3300",
+										constraint: 'availableForMeeting',
+
+									};
+									eventArray.push(component);
+								}
+
+
+							}
+
+
+							var calendarEl = document.getElementById("dayGrid");
+							var calendar = new FullCalendar.Calendar(calendarEl, {
+								headerToolbar: {
+									left: "prevYear,prev,next,nextYear today",
+									center: "title",
+									right: "dayGridMonth,dayGridWeek,dayGridDay",
+								},
+								initialDate: new Date().toISOString(),
+								navLinks: true,
+								editable: false,
+								dayMaxEvents: true,
+
+								events: eventArray,
+							});
+
+
+
+
+
+
+							calendar.render();
+
+						} else {
+							msg.classList = "alert alert-danger";
+							msg.innerHTML = "Something wrong please try again";
+							emailField.classList = "form-control";
+							passwordField.classList = "form-control";
+						}
+
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+
+
+
+			}
 
 			function markAttendence() {
 

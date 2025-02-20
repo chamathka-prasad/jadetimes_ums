@@ -484,7 +484,7 @@ if (isset($_SESSION["jd_user"])) {
 													<div class="card mb-4">
 														<div class="card-body d-flex align-items-center p-0">
 															<div class="p-4">
-															
+
 																<i class="bi bi-question-lg fs-1 lh-1 text-dark"></i>
 															</div>
 															<div class="py-4">
@@ -509,8 +509,8 @@ if (isset($_SESSION["jd_user"])) {
 																$firstDate = $startOfWeek->format('Y-m-d'); // Monday
 																$lastDate = $endOfWeek->format('Y-m-d');   // Sunday
 
-														
-																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `article` WHERE `article`.`user_id`='" . $user["id"] . "' AND `article`.`date`>='".$firstDate."' AND `article`.`date`<='".$lastDate."' AND `article`.`type`='2'", "s");
+
+																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `article` WHERE `article`.`user_id`='" . $user["id"] . "' AND `article`.`date`>='" . $firstDate . "' AND `article`.`date`<='" . $lastDate . "' AND `article`.`type`='2'", "s");
 																if ($userResultCount->num_rows == 1) {
 																	$count = $userResultCount->fetch_assoc();
 
@@ -518,7 +518,7 @@ if (isset($_SESSION["jd_user"])) {
 																	<h1 class="m-0"><span id="count2" class="number"><?php
 
 
-																														echo (3-$count["total_rows"]);
+																														echo (3 - $count["total_rows"]);
 
 
 
@@ -732,6 +732,69 @@ if (isset($_SESSION["jd_user"])) {
 		<script src="assets/js/custom.js"></script>
 		<script src="assets/js/user.js"></script>
 		<script>
+			function userFeedBackRequest() {
+
+				const myModal = new bootstrap.Modal(document.getElementById('autoModal'));
+				fetch(baseUrl + "feedBackLoadProcesToUser.php", {
+						method: "GET",
+					}).then(function(resp) {
+						return resp.json();
+
+					})
+					.then(function(value) {
+
+
+						if (value.type == "success") {
+
+							document.getElementById("feedbackMessage").innerHTML = value.message.message;
+							myModal.show();
+
+							document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+								event.preventDefault();
+								const rating = document.querySelector('input[name="rating"]:checked').value;
+								const feedback = document.getElementById('feedback').value;
+
+
+								var formData = new FormData();
+								formData.append("rating", rating);
+								formData.append("feedback", feedback);
+								formData.append("fid", value.message.id);
+
+								fetch(baseUrl + "feedbackProcess.php", {
+										method: "POST",
+										body: formData,
+									}).then(function(resp) {
+										return resp.json();
+
+									})
+									.then(function(value) {
+
+
+										if (value.type == "success") {
+											alert("Success");
+											myModal.hide();
+
+										} else if (value.type = "error") {
+											alert("somthing went wrong");
+										}
+									})
+									.catch(function(error) {
+										console.log(error);
+									});
+
+							});
+
+						} else if (value.type = "error") {
+
+						}
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+
+
+
+			}
 			document.addEventListener("DOMContentLoaded", function() {
 
 

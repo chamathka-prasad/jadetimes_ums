@@ -20,7 +20,7 @@ if (isset($_SESSION["jd_admin"])) {
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Jade Times - Manage Leaves view / change status</title>
+		<title>Jade Times - Manage Articles / admin</title>
 
 		<!-- Meta -->
 		<meta name="description" content="Marketplace for Bootstrap Admin Dashboards" />
@@ -89,79 +89,104 @@ if (isset($_SESSION["jd_admin"])) {
 					<div class="app-body" id="cbody">
 						<?php
 
-						$userResultAttendance = Database::operation("SELECT * FROM `user`", "s");
+						$userResultAttendance = Database::operation("SELECT * FROM `user`  WHERE `type_id` IN ('5','1','4')", "s");
 						$addNewList = $userResultAttendance;
 						?>
 
 
-						<div class="row">
-							
-							<!-- Button trigger modal -->
+						<div class="row mb-5">
+							<div class="col-12">
+								<p class="d-inline-flex gap-1">
+
+									<button class="btn btn-dark backgroundColorChange removeCorner" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+										<i class="bi bi-journal-plus"></i> Add New Article
+									</button>
+								</p>
+								<div class="collapse" id="collapseExample">
+									<div class="card card-body">
+
+										<div class="row">
+											<div class="col-xxl-12">
+												<div class="card mb-4">
+
+													<div class="card-body">
+														<!-- Row start -->
+														<div class="row">
+															<div class="col-xxl-12">
+																<div class="card mb-4">
+																	<div class="card-header">
+																		<h5 class="card-title">Add Article</h5>
+																	</div>
+																	<div class="card-body">
+
+																		<!-- Row start -->
+																		<div class="row" aria-disabled="">
+																			<div class="col-12 alert alert-danger d-none" id="infoMessage" role="alert">
+																			</div>
 
 
-							<!-- Modal -->
-							<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-header">
-											<h5 class="modal-title" id="staticBackdropLabel">Add a Leave</h5>
-											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-										</div>
-										<div class="modal-body">
-											<div class="row">
-												<div class="col-12">
-													<div class="alert alert-danger d-none" id="attendanceinfoMessage" role="alert">
+
+																			<div class="col-lg-6 col-sm-12 col-12">
+																				<div class="mb-3">
+																					<label class="form-label">Writer</label><label class="colorRed ms-3 fs-6">*</label>
+																					<select class="form-select removeCorner" id="writerId">
+																						<option value="0">Select writer</option>
+																						<?php
+																						if ($addNewList->num_rows != 0) {
+																							for ($adi = 0; $adi < $addNewList->num_rows; $adi++) {
+																								$userselect = $addNewList->fetch_assoc();
+
+																						?>
+																								<option value="<?php echo $userselect["id"] ?>"><?php echo $userselect["fname"] . " " . $userselect["lname"] . " " . $userselect["jid"] ?></option>
+																						<?php
+																							}
+																						}
+
+																						?>
+																					</select>
+																				</div>
+																				<div class="mb-3">
+																					<label class="form-label">Date</label>
+																					<input type="date" class="form-control removeCorner" id="date" placeholder="Enter Date" />
+																				</div>
+
+																				<div class="mb-3">
+																					<label class="form-label">Article Type</label>
+																					<select id="articleType" class="form-control removeCorner">
+																						<option value="0">Select</option>
+																						<option value="1">Commercial</option>
+																						<option value="2">Non Commercial</option>
+																					</select>
+																				</div>
+																			</div>
+
+
+																			<div class="col-sm-6 col-12">
+																				<div class="mb-3">
+																					<label class="form-label">Article Title </label>
+																					<textarea class="form-control removeCorner" id="title" placeholder="Article title" rows="5"></textarea>
+																				</div>
+																			</div>
+																		</div>
+																		<!-- Row end -->
+																	</div>
+																	<div class="card-footer">
+																		<div class="d-flex gap-2 justify-content-center">
+																			<button type="button" onclick="addNewArticleAdmin()" class="btn btn-dark backgroundColorChange w-50 removeCorner">
+																				Add Article
+																			</button>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- Row end -->
 													</div>
-												</div>
-												<div class="col-12">
-													<div class="mb-3">
-														<label class="form-label">Name</label><label class="colorRed ms-3 fs-6">*</label>
-														<select class="form-select removeCorner" id="adduser">
-															<option value="0">Select user</option>
-															<?php
-															if ($addNewList->num_rows != 0) {
-																for ($adi = 0; $adi < $addNewList->num_rows; $adi++) {
-																	$userselect = $addNewList->fetch_assoc();
 
-															?>
-																	<option value="<?php echo $userselect["id"] ?>"><?php echo $userselect["fname"] . " " . $userselect["lname"] . " " . $userselect["jid"] ?></option>
-															<?php
-																}
-															}
 
-															?>
-														</select>
-													</div>
 												</div>
-												<div class="col-12">
-													<div class="mb-3">
-														<label class="form-label">Leave Type</label>
-														<select class="form-select removeCorner" id="addtype">
-															<option value="1">Emergency</option>
-															<option value="2">Normal</option>
-															<option value="3">Special Leave</option>
-														</select>
-													</div>
-												</div>
-
-												<div class="col-12">
-													<div class="mb-3">
-														<label class="form-label">Date</label>
-														<input type="date" id="addDate" class="form-control removeCorner" value="" />
-													</div>
-												</div>
-
-												<div class="col-12">
-													<div class="mb-3">
-														<label class="form-label">Reason</label>
-														<textarea class="form-control removeCorner" id="addreason" placeholder="Reason" rows="4"></textarea>
-													</div>
-												</div>
+												<!-- Row end -->
 											</div>
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-											<button type="button" class="btn btn-dark backgroundColorChange" onclick="adminAddLeave()">Submit</button>
 										</div>
 									</div>
 								</div>
@@ -199,7 +224,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 
 
-												$userResultAttendance = Database::operation("SELECT * FROM `user` WHERE `type_id` IN ('5','1')", "s");
+												$userResultAttendance = Database::operation("SELECT * FROM `user` WHERE `type_id` IN ('5','1','4')", "s");
 												$userResultAttendanceNumbers = $userResultAttendance->num_rows;
 												if ($userResultAttendanceNumbers != 0) {
 													for ($typ = 0; $typ < $userResultAttendanceNumbers; $typ++) {
@@ -404,6 +429,88 @@ if (isset($_SESSION["jd_admin"])) {
 
 
 		<!-- Custom JS -->
+		<script>
+			function addNewArticleAdmin() {
+				var msg = document.getElementById("infoMessage");
+				var title = document.getElementById("title");
+				var writerId = document.getElementById("writerId");
+				var date = document.getElementById("date");
+				var articleType = document.getElementById("articleType");
+
+
+				if (writerId.value == 0) {
+					msg.innerHTML = "Please Select A Writer";
+					msg.classList = "alert alert-danger";
+				} else if (!date.value) {
+
+					msg.innerHTML = "Please Select A Date";
+					msg.classList = "alert alert-danger";
+
+				} else if (articleType.value == 0) {
+
+					msg.innerHTML = "Please select an Article Type";
+					msg.classList = "alert alert-danger";
+
+				} else if (!title.value) {
+
+					msg.innerHTML = "Title  is Empty";
+					msg.classList = "alert alert-danger";
+
+				} else {
+
+					var formData = new FormData();
+					formData.append("title", title.value);
+					formData.append("writer", writerId.value);
+					formData.append("date", date.value);
+					formData.append("articleType", articleType.value);
+
+					fetch(baseUrl + "adminArticleSubmittProcess.php", {
+							method: "POST",
+							body: formData,
+
+						})
+						.then(function(resp) {
+
+							try {
+								let response = resp.json();
+								return response;
+							} catch (error) {
+								msg.classList = "alert alert-danger";
+								msg.innerHTML = "Something wrong please try again";
+								emailField.classList = "form-control";
+								passwordField.classList = "form-control";
+							}
+
+						})
+						.then(function(value) {
+
+							if (value.type == "error") {
+								msg.classList = "alert alert-danger";
+								msg.innerHTML = value.message;
+
+							} else if (value.type == "success") {
+								msg.classList = "alert alert-success";
+								msg.innerHTML = value.message;
+
+								setTimeout(() => {
+									window.location = "manageArticles.php";
+								}, 1000);
+							} else {
+								msg.classList = "alert alert-danger";
+								msg.innerHTML = "Something wrong please try again";
+								emailField.classList = "form-control";
+								passwordField.classList = "form-control";
+							}
+
+						})
+						.catch(function(error) {
+							console.log(error);
+						});
+
+
+				}
+			}
+		</script>
 
 	</body>
 

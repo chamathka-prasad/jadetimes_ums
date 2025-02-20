@@ -83,7 +83,7 @@
 					</span>
 				</a>
 			</li>
-			<li class="<?php if ($currentPage =="manageStaff.php") {
+			<li class="<?php if ($currentPage == "manageStaff.php") {
 							echo "active current-page";
 						} ?>">
 				<a href="manageStaff.php">
@@ -91,6 +91,37 @@
 					<span class="menu-text">Permenent Staff</span>
 				</a>
 			</li>
+
+			<?php
+
+			if ($_SESSION["jd_admin"]["user_type"] == "admin" || $_SESSION["jd_admin"]["user_type"] == "superAdmin") {
+			?>
+				<li class="<?php if ($currentPage == "manageDocsAndFeedbacks.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="manageDocsAndFeedbacks.php">
+						<i class="bi bi-building"></i>
+						<span class="menu-text">Documents & Feedbacks </span>
+					</a>
+				</li>
+
+				<li class="<?php if ($currentPage == "profileStatus.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="profileStatus.php">
+						<i class="bi bi-hourglass-split"></i>
+						<span class="menu-text">Profile Status</span>
+					</a>
+				</li>
+
+
+
+
+
+			<?php
+
+			}
+			?>
 			<li class="<?php if ($currentPage == "managePositions.php") {
 							echo "active current-page";
 						} ?>">
@@ -118,6 +149,15 @@
 					</a>
 				</li>
 
+				<li class="<?php if ($currentPage == "reports.php") {
+								echo "active current-page";
+							} ?>">
+					<a href="reports.php">
+						<i class="bi bi-flag"></i>
+						<span class="menu-text">Report</span>
+					</a>
+				</li>
+
 
 
 				<li class="<?php if ($currentPage == "adminLeaves.php") {
@@ -133,24 +173,7 @@
 
 			}
 
-			if ($_SESSION["jd_admin"]["user_type"] == "admin" || $_SESSION["jd_admin"]["user_type"] == "superAdmin") {
-			?>
-				<li class="<?php if ($currentPage == "manageFeedback.php") {
-								echo "active current-page";
-							} ?>">
-					<a href="manageFeedback.php">
-						<i class="bi bi-building"></i>
-						<span class="menu-text">Manage Feedback</span>
-					</a>
-				</li>
 
-
-
-
-
-			<?php
-
-			}
 			?>
 
 			<li class="<?php if ($currentPage == "adminProfile.php") {

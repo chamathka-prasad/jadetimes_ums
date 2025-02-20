@@ -57,7 +57,11 @@ function userSignin() {
                     passwordField.classList = "form-control";
                 } else if (value.type == "success") {
                     window.location = "userDashBoard.php";
-                } else {
+                } else if (value.type == "info") {
+                    document.getElementById("suspensionReason").innerHTML=value.message;
+                    openSuspensionModal();
+                }
+                else {
                     msg.classList = "alert alert-danger";
                     msg.innerHTML = "Something wrong please try again";
                     emailField.classList = "form-control";

@@ -57,7 +57,7 @@ if (isset($_SESSION["jd_admin"]) || isset($_SESSION["jd_user"])) {
 
 
 
-        $feedbackMessageResult = Database::operation("SELECT * FROM `feedback_message` WHERE `feedback_message`.`id`='" . $fid . "'", "s");
+        $feedbackMessageResult = Database::operation("SELECT * FROM `user_feedback` WHERE `user_feedback`.`id`='" . $fid . "'", "s");
         if ($feedbackMessageResult->num_rows == 1) {
 
             $d = new DateTime();
@@ -65,8 +65,14 @@ if (isset($_SESSION["jd_admin"]) || isset($_SESSION["jd_user"])) {
             $d->setTimezone($tz);
             $date = $d->format("Y-m-d H:i:s");
 
-            Database::operation("INSERT INTO `feedback`(`feedback`,`user_id`,`datetime`,`feedback_message_id`,`rating`)VALUES('" . $feedback . "','" . $userId . "','" . $date . "','" . $fid . "','" . $rating . "')", "iud");
-        
+            $attachementResults = Database::operation("SELECT * FROM `attachments` WHERE `user_feedback_id`='" . $fid . "' ", "s");
+            if ($attachementResults->num_rows != 0) {
+                while ($docs = $attachementResults->fetch_assoc()) {
+                    Database::operation("INSERT INTO `document`(`path`,`user_id`,`document_type_id`,`datetime`)VALUES('" . $docs["path"] . "','" . $userId . "','".$docs["document_type_id"]."','".$date."')", "iud");
+                }
+            }
+            Database::operation("UPDATE `user_feedback` SET `feedback`='" . $feedback . "',`rating`='" . $rating . "',`status`='1' WHERE `id`='" . $fid . "'", "iud");
+
             $message->type = "success";
             $message->message = "Feedback Added success";
             echo json_encode($message);

@@ -56,7 +56,7 @@ if (isset($_SESSION["jd_admin"])) {
 		</style>
 	</head>
 
-	<body class="backgroundColorChange" onload="loadUserAttendanceTODashBoard(0)">
+	<body class="backgroundColorChange" onload="loadInternshipCompletion()">
 
 		<!-- Page wrapper start -->
 		<div class="page-wrapper">
@@ -103,7 +103,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 						<!-- Row starts -->
 						<div class="row">
-							
+
 							<!--  -->
 							<div class="col-xl-8">
 								<div class="row">
@@ -414,6 +414,22 @@ if (isset($_SESSION["jd_admin"])) {
 						</div>
 
 						<div class="row">
+
+
+
+							<div class="col-xl-4 col-sm-6 col-12">
+								<div class="card mb-4">
+									<div class="card-header">
+										<h5 class="card-title">Internship Completion</h5>
+									</div>
+									<div class="card-body">
+										<div class="scroll350" id="internshipLoader">
+
+
+										</div>
+									</div>
+								</div>
+							</div>
 							<div class="col-xl-4 col-sm-6 col-12">
 								<div class="card mb-4">
 									<div class="card-header">
@@ -455,54 +471,12 @@ if (isset($_SESSION["jd_admin"])) {
 								</div>
 							</div>
 
-							<div class="col-xl-4 col-sm-6 col-12">
-								<div class="card mb-4">
-									<div class="card-header">
-										<h5 class="card-title">Today Leaves</h5>
-									</div>
-									<div class="card-body">
-										<div class="scroll350">
 
-											<?php
-											$d = new DateTime();
-											$tz = new DateTimeZone("Asia/Colombo");
-											$d->setTimezone($tz);
-											$today = $d->format("Y-m-d");
-											$leaveResultset = Database::operation("SELECT leave.id,leave.reason,leave.leave_date,user.fname,user.lname,profile_image.name FROM `leave` INNER JOIN `user` ON `user`.`id`=`leave`.`user_id` LEFT JOIN `profile_image` ON `user`.`id`=`profile_image`.`user_id` WHERE `leave`.`leave_date`='" . $today . "' AND `leave`.`leave_status_id`='2' ORDER BY `leave`.`leave_date` DESC LIMIT 20 OFFSET 0", "s");
-											for ($i = 0; $i < $leaveResultset->num_rows; $i++) {
-												$pendingLeave = $leaveResultset->fetch_assoc();
-											?>
-												<div class="d-flex align-items-center mb-4">
-													<img src="<?php if (empty($pendingLeave["name"])) {
-																?>assets/img/defaultProfileImage.png<?php
-																								} else {
-																									echo "resources/profileImg/" . $pendingLeave["name"];
-																								}  ?>" class="img-5x me-3 rounded-4" alt="Admin Dashboard" />
-													<div class="m-0">
-														<h6 class="fw-bold"><?php echo $pendingLeave["fname"] . " " . $pendingLeave["lname"] ?></h6>
-														<p class="mb-2">
-
-															<?php echo substr($pendingLeave["reason"], 0, 20) ?>
-
-														</p>
-														<p class="small mb-2 text-secondary"><?php echo $pendingLeave["leave_date"] ?></p>
-													</div>
-													<span class="badge bg-success ms-auto">Approved</span>
-												</div>
-											<?php
-
-											}
-
-											?>
-										</div>
-									</div>
-								</div>
-							</div>
 
 							<div class="col-xl-4 col-sm-6 col-12">
 								<div class="card mb-4">
 									<div class="card-header">
-										<h5 class="card-title">Absent Employees</h5>
+										<h5 class="card-title">Absent Employees (3 Days)</h5>
 									</div>
 									<div class="card-body">
 										<div class="scroll350">
@@ -623,12 +597,14 @@ if (isset($_SESSION["jd_admin"])) {
 
 														<div class="m-0">
 															<?php
-															$lastAttendanceResultSet = Database::operation("SELECT * FROM `attendance` INNER JOIN `user` ON `user`.`id`=`attendance`.`user_id` WHERE `user_id`='" . $absentUser[0] . "'  ORDER BY `attendance`.`date_time` DESC LIMIT 1", "s");
+															$lastAttendanceResultSet = Database::operation("SELECT `user`.`id`,`attendance`.`date_time`,`user`.`user_status_id`,`user`.`email` FROM `attendance` INNER JOIN `user` ON `user`.`id`=`attendance`.`user_id` WHERE `user_id`='" . $absentUser[0] . "'  ORDER BY `attendance`.`date_time` DESC LIMIT 1", "s");
 															$lastDay = "";
 															$susStatus = "";
+															$uemail = "";
 															while ($rowSince = $lastAttendanceResultSet->fetch_assoc()) {
 																$lastDay = $rowSince["date_time"];
 																$susStatus = $rowSince["user_status_id"];
+																$uemail = $rowSince["email"];
 															}
 															?>
 															<h6 class="fw-bold"><?php echo $absentUser[1] . " " . $absentUser[2] ?></h6>
@@ -636,17 +612,20 @@ if (isset($_SESSION["jd_admin"])) {
 																<?php
 																if ($susStatus == 1) {
 																?>
-																	<a class="colorRed" href="#" onclick="suspendTheUser(<?php echo $absentUser[0] ?>)">Suspend The user</a>
+																	<a class="colorRed" href="#" onclick="window.location='adminUserDetails.php?userEmail=<?php echo $uemail?>';">Suspend The user</a>
+																	<br>
+																	Absent Since 
 																<?php
 																} else {
 																?>
-																	<span>Suspended</span>
+																	<span>New User</span>
+																	
 																<?php
 
 																}
 																?>
-																<br>
-																Absent Since <br><?php
+																
+																<br><?php
 																					echo $lastDay;
 
 																					?>
@@ -660,6 +639,50 @@ if (isset($_SESSION["jd_admin"])) {
 											<?php
 
 												}
+											}
+
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-xl-4 col-sm-6 col-12">
+								<div class="card mb-4">
+									<div class="card-header">
+										<h5 class="card-title">Today Leaves</h5>
+									</div>
+									<div class="card-body">
+										<div class="scroll350" id="internshipLoader">
+
+											<?php
+											$d = new DateTime();
+											$tz = new DateTimeZone("Asia/Colombo");
+											$d->setTimezone($tz);
+											$today = $d->format("Y-m-d");
+											$leaveResultset = Database::operation("SELECT leave.id,leave.reason,leave.leave_date,user.fname,user.lname,profile_image.name FROM `leave` INNER JOIN `user` ON `user`.`id`=`leave`.`user_id` LEFT JOIN `profile_image` ON `user`.`id`=`profile_image`.`user_id` WHERE `leave`.`leave_date`='" . $today . "' AND `leave`.`leave_status_id`='2' ORDER BY `leave`.`leave_date` DESC LIMIT 20 OFFSET 0", "s");
+											for ($i = 0; $i < $leaveResultset->num_rows; $i++) {
+												$pendingLeave = $leaveResultset->fetch_assoc();
+											?>
+												<div class="d-flex align-items-center mb-4">
+													<img src="<?php if (empty($pendingLeave["name"])) {
+																?>assets/img/defaultProfileImage.png<?php
+																								} else {
+																									echo "resources/profileImg/" . $pendingLeave["name"];
+																								}  ?>" class="img-5x me-3 rounded-4" alt="Admin Dashboard" />
+													<div class="m-0">
+														<h6 class="fw-bold"><?php echo $pendingLeave["fname"] . " " . $pendingLeave["lname"] ?></h6>
+														<p class="mb-2">
+
+															<?php echo substr($pendingLeave["reason"], 0, 20) ?>
+
+														</p>
+														<p class="small mb-2 text-secondary"><?php echo $pendingLeave["leave_date"] ?></p>
+													</div>
+													<span class="badge bg-success ms-auto">Approved</span>
+												</div>
+											<?php
+
 											}
 
 											?>
@@ -801,10 +824,114 @@ if (isset($_SESSION["jd_admin"])) {
 		}
 		?>
 		<script>
+			function loadInternshipCompletion() {
+				var internshipLoader = document.getElementById("internshipLoader");
+				internshipLoader.innerHTML = "";
+				fetch(baseUrl + "internshipCompletionLoadProcess.php", {
+						method: "GET",
+
+					}).then(function(resp) {
+						return resp.json();
+
+					})
+					.then(function(value) {
+
+
+						if (value.type == "success") {
+
+							for (let index = 0; index < value.message.length; index++) {
+								const element = value.message[index];
+								var imgpath = "assets/img/defaultProfileImage.png";
+								if (element.path != null) {
+									imgpath = "resources/profileImg/" + element.path;
+								}
+
+								var para = "";
+								var button = ""
+								if (element.count <= 0) {
+									para = "Internship is Completed";
+									button = '<button class="btn btn-primary backgroundColorChange " onclick="markAsCompleted(' + element.id + ')">Mark As Completed</button>'
+
+								} else {
+									para = "Internship Complete In " + element.count + " days";
+								}
+
+								internshipLoader.innerHTML = internshipLoader.innerHTML + `
+								<div class="d-flex align-items-center mb-4">
+													<img src="${imgpath}" class="img-5x me-3 rounded-4" alt="Admin Dashboard" />
+													<div class="m-0">
+														<h6 class="fw-bold">${element.fname} ${element.lname}</h6>
+														<p class="mb-2">
+
+							
+							${para}
+														</p>
+														<p class="small mb-2 text-secondary">${element.months} months Internship</p>
+													</div>
+							${button}
+													
+												</div>
+								`;
+
+							}
+
+
+						} else if (value.type = "error") {
+
+
+
+						}
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+
+
+
+			}
+
 			function suspendTheUser(id) {
 				var formData = new FormData();
 				formData.append("id", id);
 				fetch(baseUrl + "suspendTheUserProcess.php", {
+						method: "POST",
+						body: formData,
+
+					})
+					.then(function(resp) {
+
+						try {
+							let response = resp.json();
+							return response;
+						} catch (error) {
+
+							window.location = "adminPanel.php";
+						}
+
+					})
+					.then(function(value) {
+
+						if (value.type == "error") {
+							window.location = "adminPanel.php";
+
+						} else if (value.type == "success") {
+							window.location = "adminPanel.php";
+
+						} else {
+							alert("Something wrong please try again");
+						}
+
+					})
+					.catch(function(error) {
+						console.log(error);
+					});
+			}
+
+
+			function markAsCompleted(id) {
+				var formData = new FormData();
+				formData.append("id", id);
+				fetch(baseUrl + "internshipCompleteProcess.php", {
 						method: "POST",
 						body: formData,
 

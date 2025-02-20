@@ -959,128 +959,141 @@ function changeThePassword() {
 
 }
 
-function loadUserAttendance() {
+// function loadUserAttendance() {
 
 
-    fetch(baseUrl + "fetchAttendanceProcess.php", {
-        method: "POST",
-        headers: {
+//     fetch(baseUrl + "fetchAttendanceProcess.php", {
+//         method: "POST",
+//         headers: {
 
-            "Content-Type": "application/json;charset=UTF-8"
-        },
+//             "Content-Type": "application/json;charset=UTF-8"
+//         },
 
-    })
-        .then(function (resp) {
+//     })
+//         .then(function (resp) {
 
-            try {
-                let response = resp.json();
-                return response;
-            } catch (error) {
-                msg.classList = "alert alert-danger";
-                msg.innerHTML = "Something wrong please try again";
-                emailField.classList = "form-control";
-                passwordField.classList = "form-control";
-            }
+//             try {
+//                 let response = resp.json();
+//                 return response;
+//             } catch (error) {
+//                 msg.classList = "alert alert-danger";
+//                 msg.innerHTML = "Something wrong please try again";
+//                 emailField.classList = "form-control";
+//                 passwordField.classList = "form-control";
+//             }
 
-        })
-        .then(function (value) {
+//         })
+//         .then(function (value) {
 
-            if (value.type == "info") {
-
-
-                var attendanceArray = value.message;
-
-                var eventArray = new Array();
-
-                for (let index = 0; index < attendanceArray.length; index++) {
-                    const element = attendanceArray[index];
-                    var fetchDate = element[2];
-                    var component = {
-                        title: "Marked",
-                        start: fetchDate.split(" ")[0],
-                        color: "#90EE90",
-                        constraint: 'availableForMeeting',
-
-                    };
-                    eventArray.push(component);
-                }
-
-                for (let index = 0; index < value.leave.length; index++) {
-                    const element = value.leave[index];
-                    var fetchDate = element[0];
-                    if (element[1] == 2) {
-
-                        let component = {
-                            title: "Normal Leave",
-                            start: fetchDate,
-                            color: "#ff0d0d",
-                            constraint: 'availableForMeeting',
-
-                        };
-                        eventArray.push(component);
-                    } else if (element[1] == 4) {
-
-                        let component = {
-                            title: "Emergancy Leave",
-                            start: fetchDate,
-                            color: "#ffcc00",
-                            constraint: 'availableForMeeting',
-
-                        };
-                        eventArray.push(component);
-                    } else {
-
-                        let component = {
-                            title: "Special Leave",
-                            start: fetchDate,
-                            color: "#cc3300",
-                            constraint: 'availableForMeeting',
-
-                        };
-                        eventArray.push(component);
-                    }
+//             if (value.type == "info") {
 
 
-                }
+//                 var attendanceArray = value.message;
+
+//                 var eventArray = new Array();
+
+//                 for (let index = 0; index < attendanceArray.length; index++) {
+//                     const element = attendanceArray[index];
+//                     var fetchDate = element[2];
+//                     var component = {
+//                         title: "Marked",
+//                         start: fetchDate.split(" ")[0],
+//                         color: "#90EE90",
+//                         constraint: 'availableForMeeting',
+
+//                     };
+//                     eventArray.push(component);
+//                 }
+
+//                 for (let index = 0; index < value.pending.length; index++) {
+//                     const element = value.pending[index];
+//                     var fetchDate = element[0];
+//                     var component = {
+//                         title: "Pending",
+//                         start: fetchDate.split(" ")[0],
+//                         color: "#fee801",
+//                         constraint: 'availableForMeeting',
+
+//                     };
+//                     eventArray.push(component);
+//                 }
+
+//                 for (let index = 0; index < value.leave.length; index++) {
+//                     const element = value.leave[index];
+//                     var fetchDate = element[0];
+//                     if (element[1] == 2) {
+
+//                         let component = {
+//                             title: "Normal Leave",
+//                             start: fetchDate,
+//                             color: "#ff0d0d",
+//                             constraint: 'availableForMeeting',
+
+//                         };
+//                         eventArray.push(component);
+//                     } else if (element[1] == 4) {
+
+//                         let component = {
+//                             title: "Emergancy Leave",
+//                             start: fetchDate,
+//                             color: "#ffcc00",
+//                             constraint: 'availableForMeeting',
+
+//                         };
+//                         eventArray.push(component);
+//                     } else {
+
+//                         let component = {
+//                             title: "Special Leave",
+//                             start: fetchDate,
+//                             color: "#cc3300",
+//                             constraint: 'availableForMeeting',
+
+//                         };
+//                         eventArray.push(component);
+//                     }
 
 
-                var calendarEl = document.getElementById("dayGrid");
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    headerToolbar: {
-                        left: "prevYear,prev,next,nextYear today",
-                        center: "title",
-                        right: "dayGridMonth,dayGridWeek,dayGridDay",
-                    },
-                    initialDate: new Date().toISOString(),
-                    navLinks: true,
-                    editable: false,
-                    dayMaxEvents: true,
-
-                    events: eventArray,
-                });
+//                 }
 
 
+//                 var calendarEl = document.getElementById("dayGrid");
+//                 var calendar = new FullCalendar.Calendar(calendarEl, {
+//                     headerToolbar: {
+//                         left: "prevYear,prev,next,nextYear today",
+//                         center: "title",
+//                         right: "dayGridMonth,dayGridWeek,dayGridDay",
+//                     },
+//                     initialDate: new Date().toISOString(),
+//                     navLinks: true,
+//                     editable: false,
+//                     dayMaxEvents: true,
 
-
-
-
-                calendar.render();
-
-            } else {
-                msg.classList = "alert alert-danger";
-                msg.innerHTML = "Something wrong please try again";
-                emailField.classList = "form-control";
-                passwordField.classList = "form-control";
-            }
-
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+//                     events: eventArray,
+//                 });
 
 
 
-}
+
+
+
+//                 calendar.render();
+
+//             } else {
+//                 msg.classList = "alert alert-danger";
+//                 msg.innerHTML = "Something wrong please try again";
+//                 emailField.classList = "form-control";
+//                 passwordField.classList = "form-control";
+//             }
+
+//         })
+//         .catch(function (error) {
+//             console.log(error);
+//         });
+
+
+
+// }
 
 
 function loadUserArticles(stat) {
@@ -1353,69 +1366,7 @@ function loadUserArticles(stat) {
 }
 
 
-function userFeedBackRequest() {
 
-    const myModal = new bootstrap.Modal(document.getElementById('autoModal'));
-    fetch(baseUrl + "feedBackLoadProcesToUser.php", {
-        method: "GET",
-    }).then(function (resp) {
-        return resp.json();
-
-    })
-        .then(function (value) {
-
-
-            if (value.type == "success") {
-
-                document.getElementById("feedbackMessage").innerHTML = value.message.message;
-                myModal.show();
-
-                document.getElementById('feedbackForm').addEventListener('submit', function (event) {
-                    event.preventDefault();
-                    const rating = document.querySelector('input[name="rating"]:checked').value;
-                    const feedback = document.getElementById('feedback').value;
-
-
-                    var formData = new FormData();
-                    formData.append("rating", rating);
-                    formData.append("feedback", feedback);
-                    formData.append("fid", value.message.id);
-
-                    fetch(baseUrl + "feedbackProcess.php", {
-                        method: "POST",
-                        body: formData,
-                    }).then(function (resp) {
-                        return resp.json();
-
-                    })
-                        .then(function (value) {
-
-
-                            if (value.type == "success") {
-                                alert("Success");
-                                myModal.hide();
-
-                            } else if (value.type = "error") {
-                                alert("somthing went wrong");
-                            }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-
-                });
-
-            } else if (value.type = "error") {
-
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-
-
-
-}
 
 
 

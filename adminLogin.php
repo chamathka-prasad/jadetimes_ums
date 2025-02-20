@@ -28,7 +28,7 @@ if (isset($_COOKIE["password"])) {
 	<meta property="og:description" content="Marketplace for Bootstrap Admin Dashboards">
 	<meta property="og:type" content="Website">
 	<meta property="og:site_name" content="Bootstrap Gallery">
-<link rel="icon" href="assets/img/iconImg.jpg" />
+	<link rel="icon" href="assets/img/iconImg.jpg" />
 
 	<!-- *************
 			************ CSS Files *************
@@ -62,12 +62,12 @@ if (isset($_COOKIE["password"])) {
 						</div>
 						<div class="mb-3">
 							<label class="form-label">Email</label>
-							<input type="text" class="form-control removeCorner" id="email" placeholder="Enter your email" value="<?php echo $rememberEmail?>" />
+							<input type="text" class="form-control removeCorner" id="email" placeholder="Enter your email" value="<?php echo $rememberEmail ?>" />
 						</div>
 						<div class="mb-3">
 							<label class="form-label">Password</label>
 							<div class="input-group">
-								<input type="password" class="form-control removeCorner" id="password" placeholder="Enter password" value="<?php echo $rememberPassword?>" />
+								<input type="password" class="form-control removeCorner" id="password" placeholder="Enter password" value="<?php echo $rememberPassword ?>" />
 								<a href="#" class="input-group-text removeCorner" onclick="togglePasswordVisibility()">
 									<i class="bi bi-eye"></i>
 								</a>
@@ -94,8 +94,48 @@ if (isset($_COOKIE["password"])) {
 			</div>
 		</div>
 	</div>
+
+	<div class="modal fade" id="suspensionModal" tabindex="-1" aria-labelledby="suspensionModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Suspension Notice</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="suspensionForm">
+						<div class="mb-3">
+							<label for="suspensionReason" class="form-label">Suspension Reason</label>
+							<p class="" id="suspensionReason"></p>
+						</div>
+						<div class="mb-3">
+							<label for="recoveryInfo" class="form-label">How to Recover UMS Account</label>
+							<p> &#9656; Contact Hr Department <br>
+								&#9656; Contact Your Department Coordinator <br>
+								&#9656; Email: hr@jadetimes.com
+							</p>
+
+						</div>
+
+					</form>
+					<hr>
+					<p class="text-center mt-3">
+						<a href="https://www.jadetimes.com/internship-policies" target="_blank">Jadetimes Internship Policies</a> |
+						<a href="https://www.jadetimes.com/terms-and-conditions" target="_blank">Jadetimes Terms and Conditions</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
 	<script src="assets/js/adminLogin.js"></script>
 	<!-- Container end -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		function openSuspensionModal() {
+			const suspensionModal = new bootstrap.Modal(document.getElementById('suspensionModal'));
+			suspensionModal.show();
+		}
+	</script>
 </body>
 
 </html>

@@ -44,6 +44,7 @@ if (isset($_SESSION["jd_admin"])) {
     $position = $_POST["position"];
     $type = $_POST["type"];
     $jid = $_POST["jid"];
+    $months = $_POST["months"];
 
     $duration = $_POST["duration"];
     $linkdin = $_POST["linkdin"];
@@ -152,7 +153,7 @@ if (isset($_SESSION["jd_admin"])) {
                     $updateQuery = ",`user`.`dob`='" . $dob . "'";
                 }
 
-                Database::operation("UPDATE `user` SET `user`.`sname`='" . $sname . "',`user`.`fname`='" . $fname . "',`user`.`mname`='" . $mname . "',`user`.`lname`='" . $lname . "',`user`.`mobile`='" . $mobile . "',`user`.`nic`='" . $nic . "',`user`.`duration`='" . $duration . "',`user`.`linkdin`='" . $linkdin . "',`user`.`gender_id`='" . $gender . "',`user`.`position_id`='" . $position . "' " . $typeQuery . " ".$updateQuery." WHERE user.email='" . $email . "'", "iud");
+                Database::operation("UPDATE `user` SET `user`.`sname`='" . $sname . "',`user`.`fname`='" . $fname . "',`user`.`mname`='" . $mname . "',`user`.`months`='".$months."',`user`.`lname`='" . $lname . "',`user`.`mobile`='" . $mobile . "',`user`.`nic`='" . $nic . "',`user`.`duration`='" . $duration . "',`user`.`linkdin`='" . $linkdin . "',`user`.`gender_id`='" . $gender . "',`user`.`position_id`='" . $position . "' " . $typeQuery . " ".$updateQuery." WHERE user.email='" . $email . "'", "iud");
 
 
 

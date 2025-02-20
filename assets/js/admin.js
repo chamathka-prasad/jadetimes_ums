@@ -53,6 +53,7 @@ function adminUpdateUserProfile() {
     let message = document.getElementById("infoMessage");
     let cbody = document.getElementById("cbody");
     let type = document.getElementById("type");
+    let months = document.getElementById("months");
 
     let duration = document.getElementById("duration");
     let linkdin = document.getElementById("linkdin");
@@ -160,6 +161,7 @@ function adminUpdateUserProfile() {
 
         formData.append("duration", duration.value);
         formData.append("linkdin", linkdin.value);
+        formData.append("months", months.value);
 
         formData.append("img", formFileField.files[0]);
         formData.append("id_img", formFileField2.files[0]);
@@ -2040,7 +2042,7 @@ function loadUserFeedbackById(stat) {
                         const endDateCell = document.createElement('td');
                         endDateCell.textContent = user[6];
 
-                        
+
 
 
 
@@ -2051,7 +2053,7 @@ function loadUserFeedbackById(stat) {
 
 
                         newRow.appendChild(endDateCell);
-         
+
 
                         tablebody.appendChild(newRow);
                     }
@@ -2865,50 +2867,70 @@ function markAttendence() {
 }
 
 
-function changeTheUserStatus() {
+function changeTheUserStatus(stat) {
 
-    var stat = document.getElementById("flexSwitchCheckChecked");
     var email = document.getElementById("email");
+    var letterBody = document.getElementById("letterBody");
+    var letterSubject = document.getElementById("letterSubject");
     var msg = document.getElementById("infoMessage");
-    var formData = new FormData();
-    formData.append("status", stat.checked);
-    formData.append("email", email.value);
 
-    fetch(baseUrl + "changeUerStatus.php", {
-        method: "POST",
-        body: formData,
+    if (stat == "deactive" && letterSubject.value.length == 0) {
 
-    })
-        .then(function (resp) {
+        alert("Subject is Empty");
 
-            try {
-                let response = resp.json();
-                return response;
-            } catch (error) {
+    } else if (stat == "deactive" && letterBody.value.length == 0) {
+        alert("Body is Empty");
 
-            }
+    } else {
 
-        })
-        .then(function (value) {
+        var formData = new FormData();
+        formData.append("status", stat);
+        formData.append("email", email.value);
+        formData.append("letterSubject", letterSubject.value);
+        formData.append("letterBody", letterBody.value);
 
-            if (value.type == "error") {
-                msg.classList = "alert alert-danger";
-                msg.innerHTML = value.message;
-
-            } else if (value.type == "success") {
-                msg.classList = "alert alert-success";
-                msg.innerHTML = value.message;
-
-            } else {
-                msg.classList = "alert alert-danger";
-                msg.innerHTML = "Something wrong please try again";
-
-            }
+        fetch(baseUrl + "changeUerStatus.php", {
+            method: "POST",
+            body: formData,
 
         })
-        .catch(function (error) {
-            console.log(error);
-        });
+            .then(function (resp) {
+
+                try {
+                    let response = resp.json();
+                    return response;
+                } catch (error) {
+
+                }
+
+            })
+            .then(function (value) {
+
+                if (value.type == "error") {
+                    msg.classList = "alert alert-danger";
+                    msg.innerHTML = value.message;
+
+                } else if (value.type == "success") {
+                    alert("Success");
+                    setTimeout(() => {
+                        window.location = "adminUserDetails.php?userEmail=" + email.value;
+                    }, 1000);
+
+                } else {
+                    msg.classList = "alert alert-danger";
+                    msg.innerHTML = "Something wrong please try again";
+
+                }
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }
+
+
+
 
 }
 
@@ -4097,10 +4119,10 @@ function loadpaymentHistory(stat) {
                     // Set the month to the current month minus 1
                     date.setMonth(date.getMonth() - 1);
 
-                    let reduceDate=date.toISOString().split('T')[0];
+                    let reduceDate = date.toISOString().split('T')[0];
 
                     const roleCell = document.createElement('td');
-                    roleCell.textContent =reduceDate+" to "+ user[4];
+                    roleCell.textContent = reduceDate + " to " + user[4];
 
                     const addressCell = document.createElement('td');
                     addressCell.textContent = user[3];

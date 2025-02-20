@@ -29,21 +29,40 @@ $email = $send->email;
 $password = $send->password;
 $rememberPassword = $send->rememberPassword;
 
-$results = Database::operation("SELECT `user`.`id`,`user`.`email`,`user`.`password`,`user`.`fname`,`user`.`lname`,`user`.`jid`,`type`.`name` AS `user_type`,`position`.`name` AS `position`,`department`.`name` AS `department`,`profile_image`.`name` AS `imgPath` FROM `user` INNER JOIN `type` ON  `type`.`id`=`user`.`type_id` INNER JOIN `user_status` ON `user`.`user_status_id`=`user_status`.`id` INNER JOIN `position` ON `position`.`id`=`user`.`position_id` INNER JOIN `department` ON `department`.`id`=`position`.`department_id` LEFT JOIN  `profile_image` ON `profile_image`.`user_id`=`user`.`id` WHERE `type`.`name` IN ('admin','superAdmin') AND `user`.`email`='" . $email . "' AND `user`.`password`='" . $password . "' AND `user_status`.`name`='ACTIVE'", "s");
-
+$results = Database::operation("SELECT `user`.`id`,`user`.`email`,`user`.`password`,`user`.`fname`,`user`.`lname`,`user`.`jid`,`type`.`name` AS `user_type`,`position`.`name` AS `position`,`department`.`name` AS `department`,`profile_image`.`name` AS `imgPath`,`user_status`.`id` AS `stat`,`user`.`suspend_reason` FROM `user` INNER JOIN `type` ON  `type`.`id`=`user`.`type_id` INNER JOIN `user_status` ON `user`.`user_status_id`=`user_status`.`id` INNER JOIN `position` ON `position`.`id`=`user`.`position_id` INNER JOIN `department` ON `department`.`id`=`position`.`department_id` LEFT JOIN  `profile_image` ON `profile_image`.`user_id`=`user`.`id` WHERE `type`.`name` IN ('admin','superAdmin') AND `user`.`email`='" . $email . "' AND `user`.`password`='" . $password . "'", "s");
+$message = new stdClass();
 if ($results->num_rows == 1) {
     $adminDetails = $results->fetch_assoc();
 
-    session_start();
-    $_SESSION["jd_admin"] = $adminDetails;
-    echo json_encode("adminSuccess");
 
-    if ($rememberPassword == "true") {
+    if ($adminDetails["stat"] == 2) {
+        $message->type = "info";
 
-        setcookie("email", $email, time() + (60 * 60 * 24 * 15));
-        setcookie("password", $password, time() + (60 * 60 * 24 * 15));
+        $message->message = $adminDetails["suspend_reason"];
+        echo json_encode($message);
+    } else if ($adminDetails["stat"] == 1) {
+
+
+        session_start();
+        $_SESSION["jd_admin"] = $adminDetails;
+
+        $message->type = "success";
+        $message->message = "adminSuccess";
+        echo json_encode($message);
+
+        if ($rememberPassword == "true") {
+
+            setcookie("email", $email, time() + (60 * 60 * 24 * 15));
+            setcookie("password", $password, time() + (60 * 60 * 24 * 15));
+        }
+    } else {
+        $message->type = "error";
+        $message->message = "Invalid Request";
+        echo json_encode($message);
     }
 } else {
 
-    echo json_encode("not_admin");
+    $message->type = "error";
+    $message->message = "not_admin";
+    echo json_encode($message);
 }

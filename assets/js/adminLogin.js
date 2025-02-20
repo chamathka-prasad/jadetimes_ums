@@ -26,7 +26,7 @@ function adminSignin() {
         var send = {
             email: email,
             password: password,
-            rememberPassword:rememberPassword.checked,
+            rememberPassword: rememberPassword.checked,
         }
 
         fetch("adminSigninProcess.php", {
@@ -44,21 +44,25 @@ function adminSignin() {
                     return response;
                 } catch (error) {
                     msg.classList = "alert alert-danger";
-                    msg.innerHTML = "Something wrong please try again bla bla";
+                    msg.innerHTML = "Something wrong please try again ";
                     emailField.classList = "form-control";
                     passwordField.classList = "form-control";
                 }
 
             })
             .then(function (value) {
-             
-                if (value == "not_admin") {
+
+
+                if (value.type == "error") {
                     msg.classList = "alert alert-danger";
                     msg.innerHTML = "Incorrect Email or Password";
                     emailField.classList = "form-control";
                     passwordField.classList = "form-control";
-                } else if (value == "adminSuccess") {
-                    window.location = "adminPanel.php";
+                } else if (value.type == "info") {
+                    document.getElementById("suspensionReason").innerHTML = value.message;
+                    openSuspensionModal();
+                } else if (value.type == "success") {
+                    window.location="adminPanel.php";
                 } else {
                     msg.classList = "alert alert-danger";
                     msg.innerHTML = "Something wrong please try again";

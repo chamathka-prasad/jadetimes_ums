@@ -24,8 +24,15 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-W
 
 // Ensure the response is JSON
 header("Content-Type: application/json");
-if (isset($_SESSION["jd_user"])) {
-    $userSession = $_SESSION["jd_user"];
+if (isset($_SESSION["jd_user"]) || isset($_SESSION["jd_admin"])) {
+
+    $userSession = "";
+
+    if (isset($_SESSION["jd_user"])) {
+        $userSession = $_SESSION["jd_user"];
+    } else {
+        $userSession = $_SESSION["jd_admin"];
+    }
 
 
     $title = $_POST["title"];

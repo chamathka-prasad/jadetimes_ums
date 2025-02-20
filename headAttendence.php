@@ -86,6 +86,17 @@ if (isset($_SESSION["jd_user"])) {
 
 						<!-- App body starts -->
 						<div class="app-body" id="cbody">
+							<div class="row">
+							<div class="col-12">
+								<p class="d-inline-flex gap-1">
+
+
+									<a href="headAttendenceCalenderView.php" class="btn btn-dark backgroundColorChange removeCorner ms-5">
+										<i class="bi bi-calendar2-week"></i> Calender View
+									</a>
+								</p>
+							</div>
+							</div>
 
 							<div class="row">
 								<div class="col-sm-4 offset-sm-4">

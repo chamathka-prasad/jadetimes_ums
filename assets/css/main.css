@@ -13399,7 +13399,7 @@ ul.profile-actions > li:last-child {
  ********************
 ********************/
 .sidebarMenuScroll {
-  height: calc(100vh - 250px);
+  height: calc(100vh - 150px);
   overflow: hidden;
 }
 .sidebarMenuScroll .os-scrollbar-vertical {

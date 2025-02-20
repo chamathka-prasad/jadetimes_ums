@@ -1,9 +1,15 @@
 <?php
 session_start();
 require "connection.php";
-if (isset($_SESSION["jd_user"])) {
-	$userSession = $_SESSION["jd_user"];
+if (isset($_SESSION["jd_user"]) || isset($_SESSION["jd_admin"])) {
+
 	$page = 0;
+	$userSession = "";
+	if (isset($_SESSION["jd_user"])) {
+		$userSession = $_SESSION["jd_user"];
+	} else {
+		$userSession = $_SESSION["jd_admin"];
+	}
 
 	if (isset($_GET["page"])) {
 		$page = $_GET["page"];
@@ -64,14 +70,28 @@ if (isset($_SESSION["jd_user"])) {
 			<div class="main-container">
 
 				<!-- Sidebar wrapper start -->
-				<?php require "userSideBar.php"; ?>
+				<?php
+				
+				if (isset($_SESSION["jd_user"])) {
+					require "userSideBar.php";
+				} else {
+					require "adminSideBar.php";
+				}
+				 ?>
 				<!-- Sidebar wrapper end -->
 
 				<!-- App container starts -->
 				<div class="app-container">
 
 					<!-- App header starts -->
-					<?php require "userAppHeader.php" ?>
+					<?php
+					if (isset($_SESSION["jd_user"])) {
+						require "userAppHeader.php";
+					} else {
+						require "adminAppHeader.php";
+					}
+					
+					?>
 					<!-- App header ends -->
 
 					<!-- App hero header starts -->

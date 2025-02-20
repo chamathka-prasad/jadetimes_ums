@@ -48,13 +48,13 @@ if (empty($email)) {
 
         $mail = new PHPMailer;
         $mail->IsSMTP();
-        $mail->Host = 'mail.specialgraphics.us';
+        $mail->Host = 'mail.privateemail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@ums.jadetimes.com';
-        $mail->Password = 'jadeTimesEmailSystem';
+        $mail->Username = 'hr@jadetimes.com';
+        $mail->Password = 'u7e%ceDBV!Cm/#5';
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
-        $mail->setFrom('no-reply@ums.jadetimes.com', 'Jade Times');
+        $mail->setFrom('hr@jadetimes.com', 'Jade Times');
         $mail->addAddress($email);
         $mail->isHTML(true);
         $mail->Subject = 'Jade times User Verification Code For Password Change';

@@ -59,9 +59,6 @@ if (isset($_SESSION["jd_user"])) {
         echo json_encode($message);
     } else {
 
-
-        $taskMarkStat = false;
-
         if ($userSession["position"] == "Article Writer") {
 
             if (empty($arti1)) {
@@ -79,16 +76,42 @@ if (isset($_SESSION["jd_user"])) {
                 $message->message = "Article 3 is Empty";
                 echo json_encode($message);
                 return;
-            }else{
-                Database::operation("INSERT INTO `article`(`title`,`date`,`submit_date`,`user_id`,`type`)VALUES('" . $arti1 . "','" . $today . "','" . $date . "','" . $userSession["id"] . "','2')", "iud");
-                Database::operation("INSERT INTO `article`(`title`,`date`,`submit_date`,`user_id`,`type`)VALUES('" . $arti2 . "','" . $today . "','" . $date . "','" . $userSession["id"] . "','2')", "iud");
-                Database::operation("INSERT INTO `article`(`title`,`date`,`submit_date`,`user_id`,`type`)VALUES('" . $arti3 . "','" . $today . "','" . $date . "','" . $userSession["id"] . "','2')", "iud");
-                $taskMarkStat = true;
+            } else {
+
+
+                $results = Database::operation("SELECT * FROM `pending_attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $userDate . "%' ", "s");
+
+                if ($results->num_rows == 1) {
+                    $userDetails = $results->fetch_assoc();
+
+                    $message->type = "error";
+                    $message->message = "Already marked for today";
+                    echo json_encode($message);
+                } else {
+
+                    Database::operation("INSERT INTO `pending_attendance`(`user_id`,`date_time`,`task`,`status`)VALUES('" . $userSession["id"] . "','" . $date . "','" . $task . "','1')", "iud");
+
+                    $results = Database::operation("SELECT * FROM `pending_attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $userDate . "%' ", "s");
+
+                    if ($results->num_rows == 1) {
+                        $pdetails = $results->fetch_assoc();
+
+                        Database::operation("INSERT INTO `pending_articles`(`title`,`pid`)VALUES('" . $arti1 . "','" . $pdetails["id"] . "')", "iud");
+                        Database::operation("INSERT INTO `pending_articles`(`title`,`pid`)VALUES('" . $arti2 . "','" . $pdetails["id"] . "')", "iud");
+                        Database::operation("INSERT INTO `pending_articles`(`title`,`pid`)VALUES('" . $arti3 . "','" . $pdetails["id"] . "')", "iud");
+
+                        $message->type = "success";
+                        $message->message = "Attendance marked success";
+                        echo json_encode($message);
+                    } else {
+                        $message->type = "error";
+                        $message->message = "Attendance Submit Faild";
+                        echo json_encode($message);
+                    }
+                }
             }
         } else {
-            $taskMarkStat = true;
-        }
-        if ($taskMarkStat) {
+
             $results = Database::operation("SELECT * FROM `attendance` WHERE `user_id`='" . $userSession["id"] . "' AND `date_time` LIKE '" . $userDate . "%' ", "s");
 
             if ($results->num_rows == 1) {

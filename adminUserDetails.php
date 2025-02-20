@@ -126,7 +126,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 													<?php
 													$resultProfile = Database::operation("SELECT `user`.`id`,`user`.`email`,`user`.`password`,`user`.`prev_attendance`,`user`.`fname`,`user`.`lname`,`user`.`sname`,`user`.`mname`,`user`.`mobile`,`user`.`jid`,`user`.`nic`,`user`.`duration`,`user`.`linkdin`,`user`.`dob`,`type`.`id` AS `user_typeid`,`position`.`id` AS `positionid`,`department`.`id` AS `departmentid`,`user`.`gender_id` AS `genderId`
-													 ,`user`.`user_status_id` FROM `user` INNER JOIN `type` ON  `type`.`id`=`user`.`type_id` INNER JOIN  `user_status` ON `user`.`user_status_id`=`user_status`.`id`
+													 ,`user`.`user_status_id`,`user`.`months` FROM `user` INNER JOIN `type` ON  `type`.`id`=`user`.`type_id` INNER JOIN  `user_status` ON `user`.`user_status_id`=`user_status`.`id`
  INNER JOIN `position` ON `position`.`id`=`user`.`position_id` INNER JOIN `department` ON `department`.`id`=`position`.`department_id`  WHERE `user`.`email`='" . $useremail . "';", "s");
 
 
@@ -275,17 +275,26 @@ if (isset($_SESSION["jd_admin"])) {
 
 																		<?php if (((($admin["user_type"] == "admin" || $admin["user_type"] == "superAdmin")) && $Profile["user_typeid"] != 3) || ($admin["id"] != $Profile["id"] && $Profile["user_typeid"] == 3 && $admin["user_type"] == "superAdmin")) {
 
-																		?>
-																			<div class="col-12">
-																				<div class="form-check form-switch">
-																					<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" onchange="changeTheUserStatus()" <?php if ($Profile["user_status_id"] == 1) {
-																																																					echo "checked";
-																																																				} ?> />
-																					<label class="form-check-label" for="flexSwitchCheckChecked">User Status</label>
-																				</div>
-																			</div>
-																		<?php
 
+
+																			if ($Profile["user_status_id"] == 1) {
+
+																		?>
+																				<div class="col-8">
+																				<label class="text-success">Account is Active </label>																		
+																					<button class="btn btn-danger rounded-0" data-bs-toggle="modal" data-bs-target="#suspendModal">Suspend The User</button>
+																				</div>
+
+																			<?php
+																			} else {
+																			?>
+																				<div class="col-8">
+																					<label class="text-danger">Account is Deactive</label>
+																					<a href="#" class="text-succes text-decoration-underline" onclick="changeTheUserStatus('active')">Activate the Account</a>
+																					
+																				</div>
+																		<?php
+																			}
 																		} else {
 																		} ?>
 
@@ -482,6 +491,13 @@ if (isset($_SESSION["jd_admin"])) {
 																				<input type="text" id="duration" class="form-control removeCorner" placeholder="duration" value="<?php echo $Profile["duration"] ?>" />
 																			</div>
 																		</div>
+
+																		<div class="col-lg-3 col-sm-4 col-12">
+																			<div class="mb-3">
+																				<label class="form-label">Month Count</label>
+																				<input type="number" id="months" class="form-control removeCorner" placeholder="Internship Duration In months" value="<?php echo $Profile["months"] ?>" />
+																			</div>
+																		</div>
 																		<div class="col-lg-3 col-sm-4 col-12">
 																			<div class="mb-3">
 																				<label class="form-label">Linkdin</label>
@@ -631,7 +647,7 @@ if (isset($_SESSION["jd_admin"])) {
 																						?>
 																						<img src="<?php echo $imagePath ?>" class="img-fluid  imageSize" id="view2" alt="" />
 																						<label for="formFile2" class="btn btn-dark removeCorner " onclick="changeIdImg()">+</label>
-																						<input type="file" id="formFile2" class="d-none"/>
+																						<input type="file" id="formFile2" class="d-none" />
 																					</div>
 
 																				</div>
@@ -817,6 +833,32 @@ if (isset($_SESSION["jd_admin"])) {
 
 						<!-- Main container end -->
 
+					</div>
+
+
+					<!-- Bootstrap Modal -->
+					<div class="modal fade  modal-lg" id="suspendModal" tabindex="-1" aria-labelledby="suspendModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">Suspend the User</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+
+									<div class="mb-3">
+										<label for="subject" class="form-label">Subject</label>
+										<input type="text" class="form-control" id="letterSubject" placeholder="Enter subject" required>
+									</div>
+									<div class="mb-3">
+										<label for="body" class="form-label">Body</label>
+										<textarea class="form-control" id="letterBody" rows="10" placeholder="Write the suspension letter..." required></textarea>
+									</div>
+									<button type="submit" class="btn btn-danger w-100 rounded-0" onclick="changeTheUserStatus('deactive')">Suspend</button>
+
+								</div>
+							</div>
+						</div>
 					</div>
 					<!-- Page wrapper end -->
 

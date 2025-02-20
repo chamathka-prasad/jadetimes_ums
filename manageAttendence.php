@@ -97,6 +97,10 @@ if (isset($_SESSION["jd_admin"])) {
 									<button type="button" class="btn btn-dark backgroundColorChange removeCorner" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
 										<i class="bi bi-building-add"></i>
 									</button>
+
+									<a href="adminAttendenceCalenderView.php" class="btn btn-dark backgroundColorChange removeCorner ms-5">
+										<i class="bi bi-calendar2-week"></i> Calender View
+									</a>
 								</p>
 							</div>
 							<!-- Button trigger modal -->
@@ -277,7 +281,7 @@ if (isset($_SESSION["jd_admin"])) {
 											<select id="markStatus" class="form-select removeCorner smallText" onchange="loadUserAttendance(1)">
 
 												<option value="1" selected>All</option>
-												<option value="2" >Marked</option>
+												<option value="2">Marked</option>
 
 											</select>
 										</div>
