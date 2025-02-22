@@ -3593,6 +3593,7 @@ function registerNewStaff() {
 
     let adduser = document.getElementById("adduser");
     let dor = document.getElementById("dor");
+    let ptype = document.getElementById("ptype");
 
 
     let message = document.getElementById("infoMessageProfileUpdate");
@@ -3605,6 +3606,10 @@ function registerNewStaff() {
         message.classList = "alert alert-danger";
         backToTop(cbody);
 
+    } else if (ptype.value == 0) {
+        message.innerHTML = "Select The Payment Type";
+        message.classList = "alert alert-danger";
+        backToTop(cbody);
     }
     else if (dor.value == "" || getDateOnly(new Date(dor.value)) > getDateOnly(new Date())) {
         message.innerHTML = "Invalid Registred Date";
@@ -3621,6 +3626,7 @@ function registerNewStaff() {
         var formData = new FormData();
         formData.append("uid", adduser.value);
         formData.append("date", dor.value);
+        formData.append("ptype", ptype.value);
 
         fetch(baseUrl + "registerNewStaffProcess.php", {
             method: "POST",
@@ -3729,7 +3735,7 @@ function loadStaffDateToFront(stat) {
 
                     const newRow = document.createElement('tr');
                     newRow.onclick = function () {
-                        window.location = " adminUserDetails.php?userEmail=" + user[2];
+                        window.location = " staffProfile.php?userEmail=" + user[2];
                     }
 
 
@@ -3977,10 +3983,10 @@ function loadPendingPayments() {
                     const nocell = document.createElement('td');
                     nocell.textContent = user.fname + " " + user.lname;
                     const idCell = document.createElement('td');
-                    idCell.textContent = user.date;
+                    idCell.textContent = user.period;
 
                     const roleCell = document.createElement('td');
-                    roleCell.innerHTML = `<button class="btn btn-dark removeCorner backgroundColorChange" onclick="markAsPaid('${user.id}','${user.date}')">Mark As Paid</button>`;
+                    roleCell.innerHTML = `<button class="btn btn-dark removeCorner backgroundColorChange" onclick="markAsPaid('${user.id}','${user.start_month}')">Mark As Paid</button>`;
 
                     newRow.appendChild(nocell);
                     newRow.appendChild(idCell);
@@ -4114,18 +4120,46 @@ function loadpaymentHistory(stat) {
                     const idCell = document.createElement('td');
                     idCell.innerHTML = user[0] + " " + user[1] + "<br>" + user[2];
 
-                    let date = new Date(user[4]);
+
+
+
+                    let date2 = new Date(user[4]);  // Convert to Date object
+                    date2.setDate(date2.getDate() - 1); // Subtract one day
+
+                    // Format the date as YYYY-MM-DD
+                    let year = date2.getFullYear();
+                    let month = String(date2.getMonth() + 1).padStart(2, '0'); // Ensure two digits
+                    let day = String(date2.getDate()).padStart(2, '0'); // Ensure two digits
+
+                    let date = new Date(date2);
 
                     // Set the month to the current month minus 1
-                    date.setMonth(date.getMonth() - 1);
+                    // date.setMonth(date.getMonth() - 1);
+                    date.setDate(date.getDate() - 29);
 
                     let reduceDate = date.toISOString().split('T')[0];
 
                     const roleCell = document.createElement('td');
-                    roleCell.textContent = reduceDate + " to " + user[4];
+
+                    var textInner = "";
+                    if (user[6] == 1) {
+                        textInner = reduceDate + " to " + `${year}-${month}-${day}`;
+                    }
+
+                    if (textInner != "") {
+                        textInner = textInner + "<br/>" +user[5];
+                    } else {
+                        textInner = user[5];
+                    }
+
+
+                    roleCell.innerHTML = textInner;
 
                     const addressCell = document.createElement('td');
                     addressCell.textContent = user[3];
+
+                    const priceCell = document.createElement('td');
+                    priceCell.textContent = "$ "+user[7];
 
 
 
@@ -4133,6 +4167,7 @@ function loadpaymentHistory(stat) {
                     newRow.appendChild(idCell);
                     newRow.appendChild(roleCell);
                     newRow.appendChild(addressCell);
+                    newRow.appendChild(priceCell);
 
 
                     tablebody.appendChild(newRow);

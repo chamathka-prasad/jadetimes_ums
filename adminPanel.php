@@ -363,6 +363,13 @@ if (isset($_SESSION["jd_admin"])) {
 
 													?>
 														<h1 class="m-0 "><span class="number" id="count3"><?php echo ($count["total_rows"] + $prev)  ?></span> days</h1>
+														
+														<span class="text-dark fs-4"><?php if (($count["total_rows"] + $prev) == 0) {
+																							echo 0;
+																						} else {
+																							echo floor(($count["total_rows"] + $prev) / 30);
+																						}  ?> Months / <?php echo ($count["total_rows"] + $prev) % 30; ?> Days</span>
+
 													<?php
 													}
 													?>
@@ -612,23 +619,23 @@ if (isset($_SESSION["jd_admin"])) {
 																<?php
 																if ($susStatus == 1) {
 																?>
-																	<a class="colorRed" href="#" onclick="window.location='adminUserDetails.php?userEmail=<?php echo $uemail?>';">Suspend The user</a>
+																	<a class="colorRed" href="#" onclick="window.location='adminUserDetails.php?userEmail=<?php echo $uemail ?>';">Suspend The user</a>
 																	<br>
-																	Absent Since 
+																	Absent Since
 																<?php
 																} else {
 																?>
 																	<span>New User</span>
-																	
+
 																<?php
 
 																}
 																?>
-																
-																<br><?php
-																					echo $lastDay;
 
-																					?>
+																<br><?php
+																	echo $lastDay;
+
+																	?>
 
 
 															</p>

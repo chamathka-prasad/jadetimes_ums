@@ -34,11 +34,11 @@ if (isset($_SESSION["jd_admin"])) {
         $page = 0;
     }
 
-    $typeFilter = "";
+    $typeFilter = "ORDER BY `payment`.`date` DESC";
 
 
     if (!empty($searchText)) {
-        $typeFilter = "WHERE `user`.`fname` LIKE '" . $searchText . "%'";
+        $typeFilter = "WHERE `user`.`fname` LIKE '" . $searchText . "%'"." ORDER BY `payment`.`date` DESC";
     }
 
     
@@ -57,7 +57,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 
 
-    $userResult = Database::operation("SELECT user.fname,user.lname,user.email,payment.date,payment.date_month  FROM `user` INNER JOIN `staff` ON `staff`.`user_id`=`user`.`id` INNER JOIN `payment` ON `payment`.`staff_id`=`staff`.`id` INNER JOIN `position` ON `position`.`id`=`user`.`position_id` INNER JOIN `department` ON `department`.`id`=`position`.`department_id` INNER JOIN `user_status` ON `user`.`user_status_id`=`user_status`.`id` INNER JOIN `type` ON `type`.`id`=`user`.`type_id` LEFT JOIN `profile_image` ON `profile_image`.`user_id`=`user`.`id`" . $typeFilter . " LIMIT 25 OFFSET " . $offset, "s");
+    $userResult = Database::operation("SELECT user.fname,user.lname,user.email,payment.date,staff.month_start,payment.description,payment.type,payment.price  FROM `user` INNER JOIN `staff` ON `staff`.`user_id`=`user`.`id` INNER JOIN `payment` ON `payment`.`staff_id`=`staff`.`id` INNER JOIN `position` ON `position`.`id`=`user`.`position_id` INNER JOIN `department` ON `department`.`id`=`position`.`department_id` INNER JOIN `user_status` ON `user`.`user_status_id`=`user_status`.`id` INNER JOIN `type` ON `type`.`id`=`user`.`type_id` LEFT JOIN `profile_image` ON `profile_image`.`user_id`=`user`.`id`" . $typeFilter . " LIMIT 25 OFFSET " . $offset, "s");
 
 
     if ($userResult->num_rows != 0) {

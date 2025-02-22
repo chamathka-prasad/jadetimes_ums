@@ -44,7 +44,7 @@ if (isset($_SESSION["jd_admin"])) {
         echo json_encode($message);
     } else {
 
-        $checkUserAvailableResultSet = Database::operation("SELECT * FROM `payment` INNER JOIN `staff` ON `staff`.`id`=`payment`.`staff_id` INNER JOIN `user` ON `user`.`id`=`staff`.`user_id` WHERE `staff`.`id`='" . $sid . "' AND `payment`.`date_month`='" . $date . "'", "s");
+        $checkUserAvailableResultSet = Database::operation("SELECT * FROM `payment` INNER JOIN `staff` ON `staff`.`id`=`payment`.`staff_id` INNER JOIN `user` ON `user`.`id`=`staff`.`user_id` WHERE `staff`.`id`='" . $sid . "' AND `staff`.`month_start`='" . $date . "'", "s");
         if ($checkUserAvailableResultSet->num_rows != 0) {
 
             $message->type = "error";
@@ -55,9 +55,16 @@ if (isset($_SESSION["jd_admin"])) {
             $tz = new DateTimeZone("Asia/Colombo");
             $d->setTimezone($tz);
             $dateTimeNow = $d->format("Y-m-d H:i:s");
-            Database::operation("INSERT INTO `payment`(`staff_id`,`date_month`,`date`)VALUES('" . $sid . "','" . $date . "','" . $dateTimeNow . "')", "iud");
+            $userResult = Database::operation("SELECT * FROM `staff` WHERE `staff`.`id`='" . $sid . "'", "s");
+            $user = $userResult->fetch_assoc();
+            Database::operation("INSERT INTO `payment`(`staff_id`,`date`,`description`,`type`,`price`)VALUES('" . $sid . "','" . $dateTimeNow . "','Month Salary','1','" . $user["salary"] . "')", "iud");
 
 
+
+
+            $currentEarnings = $user["earning"];
+            $newEarning = $currentEarnings + $user["salary"];
+            Database::operation("UPDATE `staff` SET `month_start`='" . $date . "',`earning`='" . $newEarning . "' WHERE `id`='" . $sid . "'", "iud");
             $message->type = "success";
             $message->message = "Payment Success";
             echo json_encode($message);

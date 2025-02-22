@@ -211,15 +211,24 @@ if (isset($_SESSION["jd_user"])) {
 																</div>
 																<div class="card-footer">
 																	<div class="d-flex gap-2 justify-content-center">
+
+																		<?php
+																		$typeIDPass = 0;
+																		if ($userSession["position"] != "Article Writer") {
+																		?> <?php
+																			$typeIDPass = 1;
+																		}
+
+																			?>
 																		<button type="button" class="btn btn-dark backgroundColorChange removeCorner" <?php
-																																						if ($results->num_rows == 1||$resultsPendingAttendance->num_rows == 1) {
+																																						if ($results->num_rows == 1 || $resultsPendingAttendance->num_rows == 1) {
 																																						?> disabled <?php
 																																								} else if ($leaveAvailable) {
 																																									?>
 																			disabled
 																			<?php
 																																								}
-																			?> onclick="markAttendence()">
+																			?> onclick="markAttendence(<?php echo $typeIDPass ?>)">
 																			Mark Attendence
 																		</button>
 																	</div>
@@ -433,7 +442,7 @@ if (isset($_SESSION["jd_user"])) {
 
 			}
 
-			function markAttendence() {
+			function markAttendence(passId) {
 
 				var msg = document.getElementById("infoMessage");
 				var date = document.getElementById("date");
@@ -461,6 +470,18 @@ if (isset($_SESSION["jd_user"])) {
 					msg.classList = "alert alert-danger";
 					backToTop(cbody);
 				} else {
+
+
+					if (passId == 1) {
+
+						if (!arti1.value || !arti2.value || !arti3.value) {
+							msg.innerHTML = "Please Add All 3 Articles";
+							msg.classList = "alert alert-danger";
+							backToTop(cbody);
+
+							return;
+						}
+					}
 
 					var formData = new FormData();
 

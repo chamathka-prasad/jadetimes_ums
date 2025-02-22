@@ -160,47 +160,6 @@ if (isset($_SESSION["jd_user"])) {
 													</div>
 												</div>
 
-												<div class="col-12 col-lg-6">
-													<div class="card mb-4">
-														<div class="card-body d-flex align-items-center p-0">
-															<div class="p-4">
-																<i class="bi bi-pie-chart fs-1 lh-1 text-dark "></i>
-															</div>
-															<div class="py-4">
-																<h5 class="text-secondary fw-light m-0">Attendance</h5>
-																<?php
-																$prev = 0;
-
-																$prevAttendance = Database::operation("SELECT user.prev_attendance  FROM `user` WHERE `user`.`id`='" . $user["id"] . "'", "s");
-																if ($prevAttendance->num_rows == 1) {
-																	$prevCount = $prevAttendance->fetch_assoc();
-																	if (!empty($prevCount["prev_attendance"])) {
-																		$prev = $prevCount["prev_attendance"];
-																	}
-																}
-																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `attendance` WHERE `attendance`.`user_id`='" . $user["id"] . "'", "s");
-																if ($userResultCount->num_rows == 1) {
-																	$count = $userResultCount->fetch_assoc();
-
-																?>
-																	<h1 class="m-0"><span id="count1" class="number"><?php
-
-
-																														echo ($count["total_rows"] + $prev);
-
-
-
-																														?></span> days</h1>
-																<?php
-																}
-																?>
-
-															</div>
-															<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">Total</span>
-														</div>
-													</div>
-												</div>
-
 												<div class="col-12 col-md-12 col-lg-6">
 													<div class="card mb-4">
 														<div class="card-body d-flex align-items-center p-0">
@@ -233,6 +192,55 @@ if (isset($_SESSION["jd_user"])) {
 														</div>
 													</div>
 												</div>
+
+												<div class="col-12 col-lg-6">
+													<div class="card mb-4">
+														<div class="card-body d-flex align-items-center p-0">
+															<div class="p-4">
+																<i class="bi bi-pie-chart fs-1 lh-1 text-dark "></i>
+															</div>
+															<div class="py-4">
+																<h5 class="text-secondary fw-light m-0">Attendance</h5>
+																<?php
+																$prev = 0;
+
+																$prevAttendance = Database::operation("SELECT user.prev_attendance  FROM `user` WHERE `user`.`id`='" . $user["id"] . "'", "s");
+																if ($prevAttendance->num_rows == 1) {
+																	$prevCount = $prevAttendance->fetch_assoc();
+																	if (!empty($prevCount["prev_attendance"])) {
+																		$prev = $prevCount["prev_attendance"];
+																	}
+																}
+																$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `attendance` WHERE `attendance`.`user_id`='" . $user["id"] . "'", "s");
+																if ($userResultCount->num_rows == 1) {
+																	$count = $userResultCount->fetch_assoc();
+
+																?>
+																	<h1 class="m-0"><span id="count1" class="number"><?php
+
+
+																														echo ($count["total_rows"] + $prev);
+
+
+
+																														?></span> days</h1>
+																	<br>
+																	<span class="text-dark fs-4"><?php if (($count["total_rows"] + $prev) == 0) {
+																										echo 0;
+																									} else {
+																										echo floor(($count["total_rows"] + $prev) / 30);
+																									}  ?> Months / <?php echo ($count["total_rows"] + $prev) % 30; ?> Days</span>
+																<?php
+																}
+																?>
+
+															</div>
+															<span class="badge backgroundColorChange position-absolute top-0 end-0 m-3 ">Total</span>
+														</div>
+													</div>
+												</div>
+
+												
 
 												<div class="col-12 col-md-12">
 													<div class="col-12">
@@ -746,7 +754,7 @@ if (isset($_SESSION["jd_user"])) {
 
 						if (value.type == "success") {
 
-							document.getElementById("feedbackMessage").innerHTML = value.message.message;
+							document.getElementById("feedbackMessage").innerHTML = '';
 							myModal.show();
 
 							document.getElementById('feedbackForm').addEventListener('submit', function(event) {

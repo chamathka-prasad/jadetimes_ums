@@ -24,8 +24,8 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-W
 
 // Ensure the response is JSON
 header("Content-Type: application/json");
-if (isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "head") {
-    $userSession = $_SESSION["jd_user"];
+if (isset($_SESSION["jd_user"]) && $_SESSION["jd_user"]["user_type"] == "head" || $_SESSION["jd_admin"]) {
+    
 
     $pId = $_GET["pid"];
 

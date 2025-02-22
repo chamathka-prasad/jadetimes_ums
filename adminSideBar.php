@@ -38,6 +38,35 @@
 					<span class="menu-text">Manage Attendance</span>
 				</a>
 			</li>
+			<li class="<?php if ($currentPage == "adminPendingAttendanceView.php") {
+							echo "active current-page";
+						} ?>">
+				<a href="adminPendingAttendanceView.php">
+					<i class="bi bi-hourglass-split"></i>
+					<span class="menu-text">
+						Pending Attendance
+
+						<?php
+						$userResultCount = Database::operation("SELECT COUNT(*) AS total_rows FROM `pending_attendance` WHERE `status`='1'", "s");
+
+						if ($userResultCount->num_rows != 0) {
+
+							$number = $userResultCount->fetch_assoc();
+							$rowCount = $number["total_rows"];
+
+
+						?>
+							<?php
+							if ($rowCount != 0) {
+							?><span class="badge text-bg-secondary">
+									<?php echo $rowCount ?></span>
+						<?php
+							}
+						}
+						?>
+					</span>
+				</a>
+			</li>
 			<li class="<?php if ($currentPage == "manageArticles.php") {
 							echo "active current-page";
 						} ?>">
@@ -87,8 +116,8 @@
 							echo "active current-page";
 						} ?>">
 				<a href="manageStaff.php">
-					<i class="bi bi-bar-chart-steps"></i>
-					<span class="menu-text">Permenent Staff</span>
+				<i class="bi bi-currency-dollar"></i>
+					<span class="menu-text">Payments</span>
 				</a>
 			</li>
 
