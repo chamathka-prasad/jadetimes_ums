@@ -73,7 +73,7 @@ if (isset($_SESSION["jd_admin"])) {
 								<i class="bi bi-house text-dark"></i>
 								<a href="adminPanel.php">Home</a>
 							</li>
-							<li class="breadcrumb-item" aria-current="page">Manage Staff</li>
+							<li class="breadcrumb-item" aria-current="page">Payments</li>
 						</ol>
 						<!-- Breadcrumb end -->
 
@@ -87,7 +87,7 @@ if (isset($_SESSION["jd_admin"])) {
 								<p class="d-inline-flex gap-1">
 
 									<button class="btn btn-dark backgroundColorChange removeCorner" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-										<i class="bi bi-person-plus"></i> Add New Staff Member
+										<i class="bi bi-person-plus"></i> Create A Payment Profile
 									</button>
 								</p>
 								<div class="collapse" id="collapseExample">
@@ -136,7 +136,19 @@ if (isset($_SESSION["jd_admin"])) {
 															</div>
 															<div class="col-lg-6 col-sm-6 col-12">
 																<div class="mb-3">
-																	<label class="form-label">Registred Date To Staff</label>
+																	<label class="form-label">Select The Payment Method</label><label class="colorRed ms-3 fs-6">*</label>
+																	<select class="form-select removeCorner" id="ptype">
+																		<option value="0">Select Method</option>
+																		<option value="1">Fixed Payment</option>
+																		<option value="2">Project Base Payment</option>
+																		
+																		
+																	</select>
+																</div>
+															</div>
+															<div class="col-lg-6 col-sm-6 col-12">
+																<div class="mb-3">
+																	<label class="form-label">Payment Profile Registred</label>
 																	<input type="date" id="dor" class="form-control removeCorner" placeholder="The day Became a Staff Member" value="" />
 																</div>
 															</div>
@@ -148,7 +160,7 @@ if (isset($_SESSION["jd_admin"])) {
 														<div class="d-flex gap-2 justify-content-center">
 
 															<button type="button" onclick="registerNewStaff()" class="btn btn-dark removeCorner backgroundColorChange w-50">
-																Register New Staff Member
+																Register New Payment Profile
 															</button>
 														</div>
 													</div>
@@ -185,9 +197,6 @@ if (isset($_SESSION["jd_admin"])) {
 										<div class="col-3 text-end"><label class="form-label smallText">Name -</label></div>
 										<div class="col-9"><input type="text" id="searchname" class="form-control removeCorner smallText" placeholder="Search by first name" oninput="loadStaffDateToFront(1)" /></div>
 									</div>
-
-
-
 
 								</div>
 							</div>
@@ -289,7 +298,7 @@ if (isset($_SESSION["jd_admin"])) {
 												?>
 														<option value="<?php echo $statusSrh["id"] ?>" <?php if ($statusSrh["name"] == "ACTIVE") {
 																										?>selected <?php
-																												} ?>><?php echo $statusSrh["name"] ?></option>
+																											} ?>><?php echo $statusSrh["name"] ?></option>
 												<?php
 													}
 												}
@@ -377,7 +386,7 @@ if (isset($_SESSION["jd_admin"])) {
 															<th scope="col">Name</th>
 															<th scope="col">Email</th>
 															<th scope="col">Mobile</th>
-															<th scope="col">Staff Reg Date</th>
+															<th scope="col">Profile Create Date</th>
 															<th scope="col">Department</th>
 															<th scope="col">Position</th>
 															<th scope="col">User Type</th>
@@ -473,8 +482,9 @@ if (isset($_SESSION["jd_admin"])) {
 														<tr>
 															<th>Jid</th>
 															<th>User</th>
-															<th>For</th>
+															<th>Note</th>
 															<th>Date</th>
+															<th>Payment</th>
 														</tr>
 													</thead>
 													<tbody id="tableBodyphistory">

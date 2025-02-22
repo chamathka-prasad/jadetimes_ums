@@ -29,42 +29,47 @@ if (isset($_SESSION["jd_admin"])) {
 
     $sessionAdmin = $_SESSION["jd_admin"];
 
-    $sid = $_POST["id"];
-    $date = $_POST["date"];
+    $userEmail = $_POST["userEmail"];
+    $price = $_POST["price"];
+    $customDesc = $_POST["customDesc"];
 
     $message = new stdClass();
 
-    if ($sid == 0) {
+    if (empty($userEmail)) {
         $message->type = "error";
-        $message->message = "Select a User";
+        $message->message = "invalid Request";
         echo json_encode($message);
-    } else if (empty($date)) {
+    } else if (empty($price)) {
         $message->type = "error";
-        $message->message = "Invalid Payment Month empty";
+        $message->message = "Invalid Price";
+        echo json_encode($message);
+    } else if (empty($customDesc)) {
+        $message->type = "error";
+        $message->message = "Add a Description";
         echo json_encode($message);
     } else {
 
-        $checkUserAvailableResultSet = Database::operation("SELECT * FROM `payment` INNER JOIN `staff` ON `staff`.`id`=`payment`.`staff_id` INNER JOIN `user` ON `user`.`id`=`staff`.`user_id` WHERE `staff`.`id`='" . $sid . "' AND `staff`.`month_start`='" . $date . "'", "s");
-        if ($checkUserAvailableResultSet->num_rows != 0) {
+        $checkUserAvailableResultSet = Database::operation("SELECT `staff`.`id`,`staff`.`earning` FROM `staff`  INNER JOIN `user` ON `user`.`id`=`staff`.`user_id` WHERE `user`.`email`='" . $userEmail . "'", "s");
+        if ($checkUserAvailableResultSet->num_rows == 0) {
 
             $message->type = "error";
-            $message->message = "You Already Made The Payment";
+            $message->message = "INVALID REQUEST";
             echo json_encode($message);
         } else {
+
+            $profile = $checkUserAvailableResultSet->fetch_assoc();
             $d = new DateTime();
             $tz = new DateTimeZone("Asia/Colombo");
             $d->setTimezone($tz);
             $dateTimeNow = $d->format("Y-m-d H:i:s");
-            $userResult = Database::operation("SELECT * FROM `staff` WHERE `staff`.`id`='" . $sid . "'", "s");
-            $user = $userResult->fetch_assoc();
-            Database::operation("INSERT INTO `payment`(`staff_id`,`date`,`description`,`type`,`price`)VALUES('" . $sid . "','" . $dateTimeNow . "','Month Salary','1','" . $user["salary"] . "')", "iud");
 
+            Database::operation("INSERT INTO `payment`(`staff_id`,`date`,`description`,`type`,`price`)VALUES('" . $profile["id"] . "','" . $dateTimeNow . "','" . $customDesc . "','0','".$price."')", "iud");
 
+            $currentEarnings = $profile["earning"];
+            $newEarning = $currentEarnings + $price;
 
+            Database::operation("UPDATE `staff` SET `earning`='" . $newEarning . "' WHERE `id`='" . $profile["id"] . "'", "iud");
 
-            $currentEarnings = $user["earning"];
-            $newEarning = $currentEarnings + $user["salary"];
-            Database::operation("UPDATE `staff` SET `month_start`='" . $date . "',`earning`='" . $newEarning . "' WHERE `id`='" . $sid . "'", "iud");
             $message->type = "success";
             $message->message = "Payment Success";
             echo json_encode($message);

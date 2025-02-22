@@ -139,7 +139,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 													?>
 														<script>
-															window.location = "ManageUser.php"
+															window.location = "ManageUser.php";
 														</script>
 													<?php
 													}
@@ -178,10 +178,14 @@ if (isset($_SESSION["jd_admin"])) {
 																									}
 
 																									echo ($count["total_rows"] + $prev) . " days";
+																									?> <br>
+																						<span class="text-white fs-4"><?php if (($count["total_rows"] + $prev) == 0) {
+																															echo 0;
+																														} else {
+																															echo floor(($count["total_rows"] + $prev) / 30);
+																														}  ?> Months / <?php echo ($count["total_rows"] + $prev) % 30; ?> Days</span>
 
-
-
-																									?></h1>
+																					</h1>
 
 
 																			</div>
@@ -281,7 +285,7 @@ if (isset($_SESSION["jd_admin"])) {
 
 																		?>
 																				<div class="col-8">
-																				<label class="text-success">Account is Active </label>																		
+																					<label class="text-success">Account is Active </label>
 																					<button class="btn btn-danger rounded-0" data-bs-toggle="modal" data-bs-target="#suspendModal">Suspend The User</button>
 																				</div>
 
@@ -291,7 +295,7 @@ if (isset($_SESSION["jd_admin"])) {
 																				<div class="col-8">
 																					<label class="text-danger">Account is Deactive</label>
 																					<a href="#" class="text-succes text-decoration-underline" onclick="changeTheUserStatus('active')">Activate the Account</a>
-																					
+
 																				</div>
 																		<?php
 																			}
@@ -494,8 +498,27 @@ if (isset($_SESSION["jd_admin"])) {
 
 																		<div class="col-lg-3 col-sm-4 col-12">
 																			<div class="mb-3">
-																				<label class="form-label">Month Count</label>
-																				<input type="number" id="months" class="form-control removeCorner" placeholder="Internship Duration In months" value="<?php echo $Profile["months"] ?>" />
+																				<label class="form-label">Internship Duration</label>
+																				
+																				<select class="form-select removeCorner" id="months">
+																					<option value="0" <?php
+																										if ($Profile["months"] == null || $Profile["months"] == 0) {
+																											echo "selected";
+																										}
+																										?>>Not Applicable</option>
+																					<option value="3" <?php
+																										if ($Profile["months"] == 3) {
+																											echo "selected";
+																										}
+																										?>>3 Months</option>
+																					<option value="6" <?php
+																										if ($Profile["months"] == 6) {
+																											echo "selected";
+																										}
+																										?>>6 Months</option>
+
+																				</select>
+
 																			</div>
 																		</div>
 																		<div class="col-lg-3 col-sm-4 col-12">

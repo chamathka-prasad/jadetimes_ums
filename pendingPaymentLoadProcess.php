@@ -38,8 +38,8 @@ if (isset($_SESSION["jd_admin"])) {
     $message = new stdClass();
 
 
-   
-    $userResult = Database::operation("SELECT staff.id,user.fname,user.lname,user.email,user.mobile,user.jid,staff.reg_date FROM `user` INNER JOIN `staff` ON `staff`.`user_id`=`user`.`id` WHERE `user`.`user_status_id`='1' " . $typeFilter . "", "s");
+
+    $userResult = Database::operation("SELECT staff.id,user.fname,user.lname,user.email,user.mobile,user.jid,staff.reg_date,staff.month_start FROM `user` INNER JOIN `staff` ON `staff`.`user_id`=`user`.`id` WHERE `user`.`user_status_id`='1'  AND `staff`.`type`='1' " . $typeFilter . "", "s");
 
     $array = [];
     if ($userResult->num_rows != 0) {
@@ -48,40 +48,32 @@ if (isset($_SESSION["jd_admin"])) {
         while ($row = $userResult->fetch_assoc()) {
             $sid = $row["id"];
             $staffRegdate = $row["reg_date"];
-            $paymentResult = Database::operation("SELECT * FROM `payment` WHERE `payment`.`staff_id`='" . $sid . "' ORDER BY `date` DESC LIMIT 1", "s");
 
             $colomboTimeZone = new DateTimeZone('Asia/Colombo');
             $date = new DateTime('now', $colomboTimeZone);
             $today = $date->format('Y-m-d');
 
 
-            if ($paymentResult->num_rows != 0) {
-                $paymentData = $paymentResult->fetch_assoc();
-                $paymentDate = new DateTime($paymentData["date_month"]);
-                $paymentDate->modify('+1 month');        // Add one month
-                $paymentDate->format('Y-m-d');
-                if ($today >= $paymentDate) {
-                    $paymentArray = [];
-                    $paymentArray["fname"] = $row["fname"];
-                    $paymentArray["id"] = $sid;
-                    $paymentArray["lname"] = $row["lname"];
-                    $paymentArray["email"] = $row["email"];
-                    $paymentArray["date"] = $paymentDate;
-                    $array[] = $paymentArray;
-                }
-            } else {
-                $paymentDate = new DateTime($staffRegdate);
-                $paymentPlusMonth=$paymentDate->modify('+1 month');        // Add one month
-               
-                if ($today >= $paymentDate->format('Y-m-d')) {
-                    $paymentArray = [];
-                    $paymentArray["fname"] = $row["fname"];
-                    $paymentArray["id"] = $sid;
-                    $paymentArray["lname"] = $row["lname"];
-                    $paymentArray["email"] = $row["email"];
-                    $paymentArray["date"] = $paymentDate->format('Y-m-d');
-                    $array[] = $paymentArray;
-                }
+
+            $paymentDate = new DateTime($row["month_start"]);
+            $paymentDate->modify('+29 day');
+
+
+
+
+            #        // Add one month
+            $formatDate = $paymentDate->format('Y-m-d');
+
+            if ($today >= $formatDate) {
+                $paymentArray = [];
+                $paymentArray["fname"] = $row["fname"];
+                $paymentArray["id"] = $sid;
+                $paymentArray["lname"] = $row["lname"];
+                $paymentArray["email"] = $row["email"];
+                $paymentArray["period"] = "from :" . $row["month_start"] . " to :" . $formatDate;
+                $newdate = $paymentDate->modify('+1 day');
+                $paymentArray["start_month"] = $newdate->format('Y-m-d');;
+                $array[] = $paymentArray;
             }
         }
 

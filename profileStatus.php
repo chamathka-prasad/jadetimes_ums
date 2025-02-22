@@ -20,7 +20,7 @@ if (isset($_SESSION["jd_admin"])) {
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Jade Times - Manage Articles / admin</title>
+		<title>Jade Times - Profile Status / admin</title>
 
 		<!-- Meta -->
 		<meta name="description" content="Marketplace for Bootstrap Admin Dashboards" />
@@ -103,7 +103,7 @@ if (isset($_SESSION["jd_admin"])) {
 									<div class="card-body">
 										<div id="device"></div>
 										<div class="text-center my-4">
-											<h2 class="text-success" id="successPresentage">
+											<h2 class="text-dark" id="successPresentage">
 
 
 											</h2>
@@ -249,10 +249,10 @@ if (isset($_SESSION["jd_admin"])) {
 																			<div class="card-body">
 																				<div class="d-flex justify-content-between mb-2">
 																					<span class="d-none d-lg-block">Profile Status</span>
-																					<span class="text-primary fw-bold"><?php echo $presentage ?> %</span>
+																					<span class="textredChange fw-bold"><?php echo $presentage ?> %</span>
 																				</div>
 																				<div class="progress small ">
-																					<div class="progress-bar bg-primary" role="progressbar" style="width:<?php echo $presentage ?>%"
+																					<div class="progress-bar backGroundRed " role="progressbar" style="width:<?php echo $presentage ?>%"
 																						aria-valuenow="<?php echo $presentage ?>" aria-valuemin="0" aria-valuemax="100"></div>
 																				</div>
 																			</div>
@@ -302,7 +302,7 @@ if (isset($_SESSION["jd_admin"])) {
 																		width: 8,
 																		colors: ["#ffffff"],
 																	},
-																	colors: ["#008000", "#FF0000"],
+																	colors: ["#181414", "#FF0000"],
 																	tooltip: {
 																		y: {
 																			formatter: function(val) {
